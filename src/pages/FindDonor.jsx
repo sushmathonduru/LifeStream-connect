@@ -139,7 +139,7 @@ export default function FindDonor() {
                   </div>
                 </div>
                 {donor.available && donor.phone && (
-                  
+                  <a
                     href={"tel:" + donor.phone}
                     className="flex items-center gap-1 bg-red-50 text-red-600 border border-red-200 rounded-xl px-3 py-2 text-xs font-semibold flex-shrink-0"
                   >

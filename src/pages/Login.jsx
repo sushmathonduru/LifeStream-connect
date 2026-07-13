@@ -1,107 +1,122 @@
-﻿import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { Eye, EyeOff, Droplets } from "lucide-react";
+﻿import { useState } from "react"
+import { useNavigate, Link } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
-  const navigate = useNavigate();
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const { login } = useAuth()
+  const navigate = useNavigate()
 
   async function handleLogin(e) {
-    e.preventDefault();
+    e.preventDefault()
     if (!email || !password) {
-      setError("Please fill in all fields.");
-      return;
+      setError("Please enter email and password.")
+      return
     }
     try {
-      setError("");
-      setLoading(true);
-      await login(email, password);
-      navigate("/dashboard");
-    } catch {
-      setError("Invalid email or password. Please try again.");
+      setError("")
+      setLoading(true)
+      await login(email, password)
+      navigate("/dashboard")
+    } catch (err) {
+      if (err.code === "auth/user-not-found" ||
+          err.code === "auth/wrong-password" ||
+          err.code === "auth/invalid-credential") {
+        setError("Invalid email or password.")
+      } else if (err.code === "auth/too-many-requests") {
+        setError("Too many attempts. Please try again later.")
+      } else {
+        setError("Login failed. Please try again.")
+      }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen bg-white flex flex-col">
       <div className="bg-gradient-to-br from-red-600 to-red-800 flex flex-col items-center justify-center py-14 px-6">
-        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-          <Droplets className="text-red-600" size={32} />
+        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg mb-5">
+          <span className="text-red-600 text-4xl">🩸</span>
         </div>
-        <h1 className="text-white text-2xl font-bold mt-3">Lifestream Connect</h1>
+        <h1 className="text-white text-2xl font-bold">Welcome Back</h1>
         <p className="text-red-200 text-sm mt-1">Sign in to access the network</p>
       </div>
-      <div className="flex-1 bg-gray-50 px-6 py-8 rounded-t-3xl -mt-6">
-        <h2 className="text-xl font-bold text-gray-800 mb-6">Welcome Back</h2>
+
+      <div className="flex-1 px-6 py-8">
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-4">
-            {error}
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4">
+            <p className="text-red-600 text-sm">{error}</p>
           </div>
         )}
-        <div>
-          <label className="text-sm font-medium text-gray-700 mb-1 block">Email</label>
+
+        <div className="mb-4">
+          <label className="text-sm font-semibold text-gray-700 block mb-2">
+            Email
+          </label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="your@email.com"
-            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 bg-white mb-4"
+            placeholder="Enter your email"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 bg-gray-50"
           />
         </div>
-        <div>
-          <label className="text-sm font-medium text-gray-700 mb-1 block">Password</label>
+
+        <div className="mb-2">
+          <label className="text-sm font-semibold text-gray-700 block mb-2">
+            Password
+          </label>
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 bg-white pr-10"
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 bg-gray-50 pr-12"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-3 text-gray-400"
+              className="absolute right-4 top-3.5 text-gray-400"
             >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              {showPassword ? "🙈" : "👁"}
             </button>
           </div>
         </div>
-        <div className="flex justify-end mt-2 mb-4">
+
+        <div className="flex justify-end mb-6">
           <Link
             to="/forgot-password"
-            className="text-red-600 text-sm font-medium hover:text-red-700"
+            className="text-red-600 text-sm font-semibold"
           >
             Forgot password?
           </Link>
         </div>
+
         <button
-          type="button"
           onClick={handleLogin}
           disabled={loading}
-          className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3 rounded-xl shadow-md hover:from-red-700 hover:to-red-800 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+          className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 rounded-2xl shadow-lg disabled:opacity-60 flex items-center justify-center gap-2"
         >
           {loading ? (
-            <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-              Signing in...
-            </>
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           ) : (
             "Login"
           )}
         </button>
+
         <p className="text-center text-sm text-gray-500 mt-6">
-          Don't have an account? <Link to="/signup" className="text-red-600 font-semibold">Sign Up</Link>
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-red-600 font-semibold">
+            Sign Up
+          </Link>
         </p>
       </div>
     </div>
-  );
+  )
 }

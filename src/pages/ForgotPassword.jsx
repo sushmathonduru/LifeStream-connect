@@ -1,165 +1,145 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../firebase/config";
-import { Mail, ArrowLeft, CheckCircle, Droplets } from "lucide-react";
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import { auth } from "../firebase/config"
+import { sendPasswordResetEmail } from "firebase/auth"
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
+  const [email, setEmail] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState("")
 
-  async function handleReset(e) {
-    if (e && e.preventDefault) e.preventDefault();
+  async function handleReset() {
     if (!email) {
-      setError("Please enter your email address.");
-      return;
-    }
-    if (!email.includes("@")) {
-      setError("Please enter a valid email address.");
-      return;
+      setError("Please enter your email address.")
+      return
     }
     try {
-      setError("");
-      setLoading(true);
-      await sendPasswordResetEmail(auth, email);
-      setSuccess(true);
+      setError("")
+      setLoading(true)
+      await sendPasswordResetEmail(auth, email)
+      setSent(true)
     } catch (err) {
       if (err.code === "auth/user-not-found") {
-        setError("No account found with this email address.");
+        setError("No account found with this email.")
       } else if (err.code === "auth/invalid-email") {
-        setError("Please enter a valid email address.");
+        setError("Please enter a valid email address.")
       } else if (err.code === "auth/too-many-requests") {
-        setError("Too many attempts. Please try again later.");
+        setError("Too many attempts. Please try again later.")
       } else {
-        setError("Failed to send reset email. Please try again.");
+        setError("Failed to send reset email. Try again.")
       }
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-br from-red-600 to-red-800 flex flex-col items-center justify-center py-14 px-6">
-        <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-lg">
-          <Droplets className="text-red-600" size={32} />
+  if (sent) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6">
+        <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6">
+          <span className="text-4xl">✅</span>
         </div>
-        <h1 className="text-white text-2xl font-bold mt-3">Forgot Password</h1>
-        <p className="text-red-200 text-sm mt-1">Reset your password via email</p>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Email Sent!</h2>
+        <p className="text-gray-500 text-sm text-center mb-2">
+          Password reset link has been sent to
+        </p>
+        <p className="text-red-600 font-semibold text-sm mb-8">{email}</p>
+
+        <div className="bg-gray-50 rounded-2xl p-4 w-full mb-6">
+          <p className="text-sm font-semibold text-gray-700 mb-3">Next Steps</p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <span className="text-green-500">✅</span>
+              <span className="text-sm text-gray-600">Check your email inbox</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-green-500">✅</span>
+              <span className="text-sm text-gray-600">Click the reset link in the email</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-green-500">✅</span>
+              <span className="text-sm text-gray-600">Create your new password</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-green-500">✅</span>
+              <span className="text-sm text-gray-600">Come back and login</span>
+            </div>
+          </div>
+        </div>
+
+        <button
+          onClick={() => { setSent(false) }}
+          className="w-full border-2 border-red-600 text-red-600 font-semibold py-3 rounded-2xl mb-3"
+        >
+          Resend Email
+        </button>
+
+        <Link
+          to="/login"
+          className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-3 rounded-2xl text-center block"
+        >
+          Back to Login
+        </Link>
+
+        <p className="text-xs text-gray-400 text-center mt-4">
+          Check spam folder if you don't see the email
+        </p>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col">
+      <div className="bg-gradient-to-br from-red-600 to-red-800 flex flex-col items-center justify-center py-14 px-6">
+        <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg mb-5">
+          <span className="text-4xl">🔐</span>
+        </div>
+        <h1 className="text-white text-2xl font-bold">Forgot Password</h1>
+        <p className="text-red-200 text-sm mt-1 text-center">
+          Enter your email to receive a reset link
+        </p>
       </div>
 
-      {!success ? (
-        <div className="flex-1 bg-gray-50 px-6 py-8 rounded-t-3xl -mt-6">
-          <Link to="/login" className="flex items-center gap-1 text-gray-500 text-sm mb-6">
-            <ArrowLeft size={16} />
-            Back to Login
-          </Link>
+      <div className="flex-1 px-6 py-8">
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-3 mb-4">
+            <p className="text-red-600 text-sm">{error}</p>
+          </div>
+        )}
 
-          <h2 className="text-xl font-bold text-gray-800 mb-1">Reset Password</h2>
-          <p className="text-sm text-gray-500 mb-6">Enter your registered email address. We will send you a password reset link.</p>
+        <div className="mb-6">
+          <label className="text-sm font-semibold text-gray-700 block mb-2">
+            Email Address
+          </label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter your registered email"
+            className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 bg-gray-50"
+          />
+        </div>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mb-4">
-              {error}
-            </div>
+        <button
+          onClick={handleReset}
+          disabled={loading}
+          className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 rounded-2xl shadow-lg disabled:opacity-60 flex items-center justify-center gap-2 mb-4"
+        >
+          {loading ? (
+            <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+          ) : (
+            "Send Reset Link"
           )}
+        </button>
 
-          <div>
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Email Address</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-3.5 text-gray-400" size={18} />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your registered email"
-                className="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-3 text-sm focus:outline-none focus:border-red-400 bg-white"
-              />
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleReset}
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3 rounded-xl shadow-md hover:from-red-700 hover:to-red-800 transition-all disabled:opacity-60 flex items-center justify-center gap-2 mt-4"
-          >
-            {loading ? (
-              <>
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                Sending...
-              </>
-            ) : (
-              <>
-                <Mail size={18} />
-                Send Reset Link
-              </>
-            )}
-          </button>
-
-          <p className="text-center text-sm text-gray-500 mt-6">
-            Remember your password? <Link to="/login" className="text-red-600 font-semibold">Login</Link>
-          </p>
-        </div>
-      ) : (
-        <div className="flex-1 px-6 py-8 flex flex-col items-center rounded-t-3xl bg-gray-50 -mt-6">
-          <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6 mt-4">
-            <CheckCircle className="text-green-500" size={48} />
-          </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">Email Sent!</h2>
-          <p className="text-sm text-gray-500 text-center">Password reset link sent to</p>
-          <p className="text-red-600 font-semibold text-sm mt-1 mb-6 text-center">{email}</p>
-
-          <div className="bg-white rounded-2xl p-4 shadow-sm text-left w-full mb-6">
-            <p className="text-sm font-semibold text-gray-700 mb-3">Next Steps</p>
-            <div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-green-600 text-xs font-bold">✓</span>
-                </div>
-                <span className="text-sm text-gray-600">Check your email inbox</span>
-              </div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-green-600 text-xs font-bold">✓</span>
-                </div>
-                <span className="text-sm text-gray-600">Click the reset link in the email</span>
-              </div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-green-600 text-xs font-bold">✓</span>
-                </div>
-                <span className="text-sm text-gray-600">Create your new password</span>
-              </div>
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <span className="text-green-600 text-xs font-bold">✓</span>
-                </div>
-                <span className="text-sm text-gray-600">Come back and login</span>
-              </div>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleReset}
-            disabled={loading}
-            className="w-full border-2 border-red-600 text-red-600 font-semibold py-3 rounded-xl mb-3 flex items-center justify-center gap-2"
-          >
-            <Mail size={16} />
-            Resend Email
-          </button>
-
-          <Link
-            to="/login"
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3 rounded-xl shadow-md flex items-center justify-center"
-          >
-            Back to Login
-          </Link>
-        </div>
-      )}
+        <Link
+          to="/login"
+          className="w-full border-2 border-gray-200 text-gray-600 font-semibold py-3 rounded-2xl text-center block"
+        >
+          Back to Login
+        </Link>
+      </div>
     </div>
-  );
+  )
 }

@@ -45,7 +45,9 @@ export default function Login() {
           <span className="text-red-600 text-4xl">🩸</span>
         </div>
         <h1 className="text-white text-2xl font-bold">Welcome Back</h1>
-        <p className="text-red-200 text-sm mt-1">Sign in to access the network</p>
+        <p className="text-red-200 text-sm mt-1">
+          Sign in to access the network
+        </p>
       </div>
 
       <div className="flex-1 px-6 py-8">
@@ -68,7 +70,7 @@ export default function Login() {
           />
         </div>
 
-        <div className="mb-2">
+        <div className="mb-1">
           <label className="text-sm font-semibold text-gray-700 block mb-2">
             Password
           </label>
@@ -90,7 +92,7 @@ export default function Login() {
           </div>
         </div>
 
-        <div className="flex justify-end mb-6 mt-2">
+        <div className="flex justify-end mb-6 mt-3">
           <Link
             to="/forgot-password"
             className="text-red-600 text-sm font-semibold"

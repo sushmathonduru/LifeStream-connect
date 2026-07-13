@@ -242,13 +242,13 @@ export default function DonorTracking() {
             </div>
             <div className="text-right">
               <p className="text-gray-900 font-semibold">{request.patientName}</p>
-              <p className="text-gray-500 text-xs mt-1">Patient: " + (requester ? requester.name : "Loading...") + "</p>
+              <p className="text-gray-500 text-xs mt-1">Patient: {requester ? requester.name : "Loading..."}</p>
             </div>
           </div>
           <div className="space-y-1 text-sm text-gray-600 border-t pt-3">
-            <p>Hospital: " + (request.hospital || "N/A") + "</p>
-            <p>City: " + (request.city || "N/A") + "</p>
-            <p>Units: " + (request.units || "0") + " units needed</p>
+            <p>Hospital: {request.hospital || "N/A"}</p>
+            <p>City: {request.city || "N/A"}</p>
+            <p>Units: {request.units || "0"} units needed</p>
           </div>
           {requester && requester.phone && (
             <a href={"tel:" + requester.phone} className="mt-3 w-full bg-green-600 text-white rounded-xl py-2 font-semibold flex items-center justify-center gap-2">

@@ -196,13 +196,13 @@ export default function LiveTracking() {
             </div>
             {donor && donor.phone && (
               <div className="flex gap-2">
-                
+                <a
                   href={"tel:" + donor.phone}
                   className="w-9 h-9 bg-green-100 rounded-full flex items-center justify-center"
                 >
                   <Phone size={16} className="text-green-600" />
                 </a>
-                
+                <a
                   href={"https://wa.me/" + donor.phone}
                   target="_blank"
                   rel="noreferrer"

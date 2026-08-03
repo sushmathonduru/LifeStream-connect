@@ -177,7 +177,7 @@ export default function DonorTracking() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-24 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20 flex items-center justify-center">
         <div className="w-8 h-8 border-4 border-red-200 border-t-red-600 rounded-full animate-spin" />
       </div>
     );
@@ -185,7 +185,7 @@ export default function DonorTracking() {
 
   if (!requestId) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-24">
+      <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
         <div className="bg-gradient-to-br from-red-600 to-red-800 px-6 pt-12 pb-16">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-white mb-4">
             <ArrowLeft size={20} /> Back
@@ -209,7 +209,7 @@ export default function DonorTracking() {
 
   if (status === "completed") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 pb-24 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 pb-20 md:pb-0 md:ml-20 flex items-center justify-center">
         <div className="text-center">
           <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Donation Completed!</h1>
@@ -224,7 +224,7 @@ export default function DonorTracking() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-6 pt-12 pb-16">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-white mb-4">
           <ArrowLeft size={20} /> Back

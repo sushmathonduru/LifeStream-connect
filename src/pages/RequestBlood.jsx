@@ -83,8 +83,8 @@ export default function RequestBlood() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="px-4 pt-10 pb-4">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+      <div className="max-w-5xl mx-auto px-4 md:px-8 pt-10 pb-4">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-700 mb-4">
           <ArrowLeft size={20} /> Back
         </button>
@@ -101,7 +101,7 @@ export default function RequestBlood() {
         </div>
       </div>
 
-      <div className="px-4 space-y-4">
+      <div className="max-w-5xl mx-auto px-4 md:px-8 space-y-4">
         {isDonor && (
           <div className="bg-blue-50 border border-blue-100 rounded-3xl p-4 text-blue-900 space-y-2">
             <p className="text-sm font-semibold">You are requesting as a patient</p>

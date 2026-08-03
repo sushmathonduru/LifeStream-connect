@@ -40,13 +40,15 @@ export default function FindDonor() {
   })
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 pt-12 pb-6">
-        <h1 className="text-white text-xl font-bold mb-1">Find Donor</h1>
-        <p className="text-red-200 text-xs">Search nearby blood donors</p>
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-6">
+        <div className="max-w-5xl mx-auto">
+          <h1 className="text-white text-xl font-bold mb-1">Find Donor</h1>
+          <p className="text-red-200 text-xs">Search nearby blood donors</p>
+        </div>
       </div>
 
-      <div className="px-4 py-4 space-y-4">
+      <div className="max-w-5xl mx-auto px-4 md:px-8 py-4 space-y-4">
         <div className="relative">
           <Search className="absolute left-3 top-3.5 text-gray-400" size={18} />
           <input
@@ -97,7 +99,7 @@ export default function FindDonor() {
           </div>
         )}
 
-        <div className="space-y-3">
+        <div className="space-y-3 md:grid md:grid-cols-2 md:gap-3 md:space-y-0">
           {!loading &&
             filteredDonors.map((donor) => (
               <div

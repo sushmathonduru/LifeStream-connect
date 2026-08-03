@@ -112,7 +112,7 @@ export default function LiveTracking() {
 
   if (!requestId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6 pb-24">
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6 pb-20 md:pb-0 md:ml-20">
         <MapPin className="text-gray-300 mb-4" size={64} />
         <h2 className="text-xl font-bold text-gray-600 mb-2">No Active Tracking</h2>
         <p className="text-gray-400 text-sm text-center mb-6">
@@ -130,9 +130,9 @@ export default function LiveTracking() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
       {/* Header */}
-      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 pt-12 pb-6">
+      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-6">
         <button
           onClick={() => navigate(-1)}
           className="text-white mb-4 flex items-center gap-1"
@@ -144,7 +144,7 @@ export default function LiveTracking() {
         <p className="text-red-200 text-xs mt-1">Track your donor in real time</p>
       </div>
 
-      <div className="px-4 py-4 space-y-4">
+      <div className="max-w-5xl mx-auto px-4 md:px-8 py-4 space-y-4">
         {/* Status Banner */}
         {currentStep === 1 && (
           <div className="bg-yellow-50 border border-yellow-200 rounded-2xl p-3">

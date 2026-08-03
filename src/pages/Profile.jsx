@@ -109,9 +109,9 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 pt-12 pb-8">
-        <div className="flex flex-col items-center">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-8">
+        <div className="max-w-4xl mx-auto flex flex-col items-center">
           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg mb-3">
             <span className="text-red-600 font-bold text-2xl">{getInitials()}</span>
           </div>
@@ -136,7 +136,7 @@ export default function Profile() {
         </div>
       </div>
 
-      <div className="px-4 py-4 space-y-4">
+      <div className="max-w-4xl mx-auto px-4 md:px-8 py-4 space-y-4">
         {success && (
           <div className="bg-green-50 border border-green-200 rounded-2xl p-3">
             <p className="text-green-700 text-sm text-center font-medium">{success}</p>

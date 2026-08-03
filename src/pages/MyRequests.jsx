@@ -55,8 +55,8 @@ export default function MyRequests() {
   const currentRequests = activeTab === "active" ? activeRequests : completedRequests
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="px-4 pt-10 pb-4">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+      <div className="max-w-5xl mx-auto px-4 md:px-8 pt-10 pb-4">
         <div className="flex items-center justify-between mb-5">
           <h1 className="text-2xl font-bold text-gray-900">My Requests</h1>
         </div>

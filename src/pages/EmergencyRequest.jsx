@@ -103,16 +103,9 @@ export default function EmergencyRequest() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
-      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 pt-12 pb-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="text-white mb-4 flex items-center gap-1"
-        >
-          <ArrowLeft size={20} />
-          <span className="text-sm">Back</span>
-        </button>
-        <div className="flex items-center gap-3">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-6">
+        <div className="max-w-5xl mx-auto flex items-center gap-3">
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center animate-pulse">
             <AlertCircle className="text-red-600" size={22} />
           </div>
@@ -125,7 +118,7 @@ export default function EmergencyRequest() {
         </div>
       </div>
 
-      <div className="px-4 py-6 space-y-4">
+      <div className="max-w-5xl mx-auto px-4 md:px-8 py-6 space-y-4">
         {sent && (
           <div className="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center gap-3">
             <CheckCircle className="text-green-500 flex-shrink-0" size={22} />

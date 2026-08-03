@@ -109,7 +109,7 @@ export default function Notifications() {
   }).length
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
       {toast && (
         <div className={
           "fixed top-4 left-4 right-4 z-50 rounded-2xl p-4 " +
@@ -134,8 +134,8 @@ export default function Notifications() {
         </div>
       )}
 
-      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 pt-12 pb-6">
-        <div className="flex items-center justify-between">
+      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-6">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="relative w-10 h-10 bg-white rounded-full flex items-center justify-center">
               <Bell className="text-red-600" size={22} />
@@ -164,7 +164,7 @@ export default function Notifications() {
         </div>
       </div>
 
-      <div className="px-4 py-4 space-y-3">
+      <div className="max-w-5xl mx-auto px-4 md:px-8 py-4 space-y-3">
         {loading && (
           <div className="flex justify-center py-8">
             <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>

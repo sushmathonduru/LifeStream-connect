@@ -175,7 +175,7 @@ export default function Dashboard() {
       : 100
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 md:pb-8">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 lg:px-16 pt-12 pb-8">
         <div className="max-w-5xl mx-auto">
           <div className="flex items-center justify-between mb-6">
@@ -219,7 +219,7 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 md:px-8 lg:px-16 py-4 space-y-4 md:ml-20">
+      <div className="max-w-5xl mx-auto px-4 md:px-8 lg:px-16 py-4 space-y-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <button
             onClick={() => navigate("/request-blood")}

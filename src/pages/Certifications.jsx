@@ -233,9 +233,9 @@ export default function Certifications() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-24 md:pb-8">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 lg:px-16 pt-12 pb-8">
-        <div className="max-w-4xl mx-auto md:ml-20">
+        <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-12 h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-2xl">
               🏆
@@ -248,7 +248,7 @@ export default function Certifications() {
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 md:px-8 md:ml-20 pb-6 pt-6 space-y-6">
+      <div className="max-w-4xl mx-auto px-4 md:px-8 pb-6 pt-6 space-y-6">
         {!isDonor ? (
           <div className="bg-white rounded-3xl shadow-sm p-6 text-center">
             <div className="text-5xl mb-3">🎖️</div>

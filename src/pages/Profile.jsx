@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { db } from "../firebase/config"
 import { ref, onValue, update } from "firebase/database"
-import { User, Phone, Mail, MapPin, Droplets, LogOut, Edit, Check, X } from "lucide-react"
+import { Phone, Mail, MapPin, Droplets, LogOut, Edit, Check, X } from "lucide-react"
 import BottomNav from "../components/BottomNav"
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]

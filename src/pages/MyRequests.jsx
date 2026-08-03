@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase/config";
 import { ref, onValue, update } from "firebase/database";
-import { Droplets, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import BottomNav from "../components/BottomNav";
 
 function getStatusStyle(status) {

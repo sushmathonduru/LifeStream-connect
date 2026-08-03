@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import { db } from "../firebase/config"
 import { ref, onValue } from "firebase/database"
 import { Search, MapPin, Phone, User } from "lucide-react"
@@ -12,7 +11,6 @@ export default function FindDonor() {
   const [selectedGroup, setSelectedGroup] = useState("All")
   const [donors, setDonors] = useState([])
   const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
 
   useEffect(() => {
     const usersRef = ref(db, "users")

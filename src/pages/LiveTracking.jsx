@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
-import { useAuth } from "../context/AuthContext"
 import { db } from "../firebase/config"
 import { ref, onValue } from "firebase/database"
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
@@ -43,7 +42,6 @@ export default function LiveTracking() {
   const [loading, setLoading] = useState(true)
   const [eta, setEta] = useState("Waiting for donor...")
   const [distance, setDistance] = useState(null)
-  const { currentUser } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const requestId = location.state?.requestId || null

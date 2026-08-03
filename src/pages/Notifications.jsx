@@ -8,7 +8,16 @@ import BottomNav from "../components/BottomNav"
 export default function Notifications() {
   const [notifications, setNotifications] = useState([])
   const [loading, setLoading] = useState(true)
+  const [nowTimestamp, setNowTimestamp] = useState(() => Date.now())
   const { currentUser } = useAuth()
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setNowTimestamp(Date.now())
+    }, 60000)
+
+    return () => clearInterval(timer)
+  }, [])
 
   useEffect(() => {
     if (!currentUser) return
@@ -30,7 +39,7 @@ export default function Notifications() {
 
   function formatTime(timestamp) {
     if (!timestamp) return ""
-    const diff = Date.now() - timestamp
+    const diff = nowTimestamp - timestamp
     const mins = Math.floor(diff / 60000)
     if (mins < 1) return "Just now"
     if (mins < 60) return mins + " min ago"

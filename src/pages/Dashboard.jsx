@@ -10,59 +10,45 @@ function getCurrentTimestamp() {
   return Date.now()
 }
 
-function getBadgeMeta(totalDonations) {
-  if (totalDonations >= 20) {
-    return { name: "Diamond Donor", emoji: "💠", min: 20, next: null, label: "Diamond" }
-  }
-  if (totalDonations >= 10) {
-    return { name: "Platinum Donor", emoji: "💎", min: 10, next: 20, label: "Platinum" }
-  }
-  if (totalDonations >= 6) {
-    return { name: "Gold Donor", emoji: "🥇", min: 6, next: 10, label: "Gold" }
-  }
-  if (totalDonations >= 3) {
-    return { name: "Silver Donor", emoji: "🥈", min: 3, next: 6, label: "Silver" }
-  }
-  if (totalDonations >= 1) {
-    return { name: "Bronze Donor", emoji: "🥉", min: 1, next: 3, label: "Bronze" }
-  }
-  return { name: "No Badge", emoji: "🏅", min: 0, next: 1, label: "Bronze" }
-}
-
 export default function Dashboard() {
   const [userProfile, setUserProfile] = useState(null)
   const [donorCount, setDonorCount] = useState(0)
   const [myRequestCount, setMyRequestCount] = useState(0)
   const [emergencyCount, setEmergencyCount] = useState(0)
+  const [unreadCount, setUnreadCount] = useState(0)
   const [availableRequests, setAvailableRequests] = useState([])
   const [completedDonations, setCompletedDonations] = useState(0)
+  const [donationCount, setDonationCount] = useState(0)
+  const [badgeEmoji, setBadgeEmoji] = useState("")
+  const [badgeLabel, setBadgeLabel] = useState("")
   const { currentUser } = useAuth()
   const navigate = useNavigate()
 
   useEffect(() => {
     if (!currentUser) return
 
-    const unsubscribeUser = onValue(ref(db, "users/" + currentUser.uid), (snap) => {
-      if (snap.val()) {
-        setUserProfile(snap.val())
+    const unsubscribeUser = onValue(ref(db, "users/" + currentUser.uid), function (snap) {
+      const data = snap.val()
+      if (data) {
+        setUserProfile(data)
       } else {
         setUserProfile(null)
       }
     })
 
-    const unsubscribeUsers = onValue(ref(db, "users"), (snap) => {
+    const unsubscribeUsers = onValue(ref(db, "users"), function (snap) {
       const data = snap.val()
       if (data) {
-        const donors = Object.values(data).filter(function (user) {
+        const count = Object.values(data).filter(function (user) {
           return user && user.isDonor === true
-        })
-        setDonorCount(donors.length)
+        }).length
+        setDonorCount(count)
       } else {
         setDonorCount(0)
       }
     })
 
-    const unsubscribeRequests = onValue(ref(db, "requests"), (snap) => {
+    const unsubscribeRequests = onValue(ref(db, "requests"), function (snap) {
       const data = snap.val()
       if (data) {
         const all = Object.entries(data).map(function ([id, request]) {
@@ -71,7 +57,7 @@ export default function Dashboard() {
         const mine = all.filter(function (request) {
           return request.userId === currentUser.uid
         })
-        const available = all.filter(function (request) {
+        const pending = all.filter(function (request) {
           return request.status === "pending" && request.userId !== currentUser.uid
         })
         const completed = all.filter(function (request) {
@@ -79,24 +65,60 @@ export default function Dashboard() {
         })
 
         setMyRequestCount(mine.length)
-        setAvailableRequests(available)
+        setAvailableRequests(pending)
         setCompletedDonations(completed.length)
+        setDonationCount(completed.length)
+
+        if (completed.length >= 20) {
+          setBadgeEmoji("💠")
+          setBadgeLabel("Diamond Donor")
+        } else if (completed.length >= 10) {
+          setBadgeEmoji("💎")
+          setBadgeLabel("Platinum Donor")
+        } else if (completed.length >= 6) {
+          setBadgeEmoji("🥇")
+          setBadgeLabel("Gold Donor")
+        } else if (completed.length >= 3) {
+          setBadgeEmoji("🥈")
+          setBadgeLabel("Silver Donor")
+        } else if (completed.length >= 1) {
+          setBadgeEmoji("🥉")
+          setBadgeLabel("Bronze Donor")
+        } else {
+          setBadgeEmoji("")
+          setBadgeLabel("")
+        }
       } else {
         setMyRequestCount(0)
         setAvailableRequests([])
         setCompletedDonations(0)
+        setDonationCount(0)
+        setBadgeEmoji("")
+        setBadgeLabel("")
       }
     })
 
-    const unsubscribeEmergency = onValue(ref(db, "emergency"), (snap) => {
+    const unsubscribeEmergency = onValue(ref(db, "emergency"), function (snap) {
       const data = snap.val()
       if (data) {
         const active = Object.values(data).filter(function (item) {
           return item && item.status === "active"
-        })
-        setEmergencyCount(active.length)
+        }).length
+        setEmergencyCount(active)
       } else {
         setEmergencyCount(0)
+      }
+    })
+
+    const unsubscribeNotifications = onValue(ref(db, "notifications/" + currentUser.uid), function (snap) {
+      const data = snap.val()
+      if (data) {
+        const unread = Object.values(data).filter(function (item) {
+          return item && item.read === false
+        }).length
+        setUnreadCount(unread)
+      } else {
+        setUnreadCount(0)
       }
     })
 
@@ -105,6 +127,7 @@ export default function Dashboard() {
       unsubscribeUsers()
       unsubscribeRequests()
       unsubscribeEmergency()
+      unsubscribeNotifications()
     }
   }, [currentUser])
 
@@ -116,6 +139,7 @@ export default function Dashboard() {
         donorId: currentUser.uid,
         acceptedAt: acceptedAtValue
       })
+
       if (userProfile) {
         const notificationTime = getCurrentTimestamp()
         await push(ref(db, "notifications/" + req.userId), {
@@ -126,6 +150,7 @@ export default function Dashboard() {
           createdAt: notificationTime
         })
       }
+
       navigate("/donor-tracking", { state: { requestId: req.id } })
     } catch (err) {
       console.log("Accept error:", err)
@@ -156,23 +181,41 @@ export default function Dashboard() {
     return request.bloodGroup === userProfile.bloodGroup
   })
 
-  const badgeMeta = getBadgeMeta(completedDonations)
-  const nextBadgeTarget = badgeMeta.next
-  const nextBadgeName = badgeMeta.next && badgeMeta.next === 3
-    ? "Silver Donor"
-    : badgeMeta.next && badgeMeta.next === 6
-      ? "Gold Donor"
-      : badgeMeta.next && badgeMeta.next === 10
-        ? "Platinum Donor"
-        : badgeMeta.next && badgeMeta.next === 20
-          ? "Diamond Donor"
-          : "Bronze Donor"
+  const nextBadgeTarget = donationCount >= 20
+    ? null
+    : donationCount >= 10
+      ? 20
+      : donationCount >= 6
+        ? 10
+        : donationCount >= 3
+          ? 6
+          : donationCount >= 1
+            ? 3
+            : 1
 
-  const progress = badgeMeta.min === 0
-    ? 0
-    : badgeMeta.next
-      ? ((completedDonations - badgeMeta.min) / (badgeMeta.next - badgeMeta.min)) * 100
-      : 100
+  const nextBadgeName = donationCount >= 20
+    ? "Highest badge reached"
+    : donationCount >= 10
+      ? "Diamond Donor"
+      : donationCount >= 6
+        ? "Platinum Donor"
+        : donationCount >= 3
+          ? "Gold Donor"
+          : donationCount >= 1
+            ? "Silver Donor"
+            : "Bronze Donor"
+
+  const progress = donationCount >= 20
+    ? 100
+    : donationCount >= 10
+      ? ((donationCount - 10) / 10) * 100
+      : donationCount >= 6
+        ? ((donationCount - 6) / 4) * 100
+        : donationCount >= 3
+          ? ((donationCount - 3) / 3) * 100
+          : donationCount >= 1
+            ? ((donationCount - 1) / 2) * 100
+            : 0
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
@@ -184,36 +227,65 @@ export default function Dashboard() {
               <h1 className="text-white text-2xl font-bold mt-1">
                 {getGreeting()}, {getName()}!
               </h1>
-              {userProfile && userProfile.isDonor && (
+
+              {userProfile && userProfile.isDonor && badgeEmoji && (
                 <button
                   onClick={() => navigate("/certifications")}
-                  className="flex items-center gap-1 bg-white bg-opacity-20 border border-white border-opacity-30 text-white text-xs px-3 py-1.5 rounded-full mt-2"
+                  className="flex items-center gap-2 bg-white bg-opacity-20 border border-white border-opacity-40 text-white text-sm px-4 py-2 rounded-full mt-2 font-medium"
                 >
-                  <span>{badgeMeta.emoji}</span>
-                  <span>{badgeMeta.name}</span>
+                  <span className="text-base">{badgeEmoji}</span>
+                  <span>{badgeLabel}</span>
+                </button>
+              )}
+
+              {userProfile && userProfile.isDonor && !badgeEmoji && (
+                <button
+                  onClick={() => navigate("/certifications")}
+                  className="flex items-center gap-2 bg-white bg-opacity-20 border border-white border-opacity-40 text-white text-xs px-3 py-1.5 rounded-full mt-2"
+                >
+                  <span>🎖️</span>
+                  <span>Start earning badges</span>
                 </button>
               )}
             </div>
+
             <button
               onClick={() => navigate("/notifications")}
-              className="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center"
+              className="relative w-11 h-11 bg-white bg-opacity-20 rounded-full flex items-center justify-center border border-white border-opacity-30"
             >
-              <Bell className="text-white" size={20} />
+              <Bell className="text-white" size={22} />
+              {unreadCount > 0 && (
+                <span className="absolute top-1 right-1 w-3 h-3 bg-yellow-400 rounded-full border border-white"></span>
+              )}
             </button>
           </div>
 
-          <div className="grid grid-cols-3 gap-3 mt-4">
-            <div className="bg-white rounded-2xl p-4 text-center shadow-sm">
-              <p className="text-red-600 font-bold text-3xl">{donorCount}</p>
-              <p className="text-gray-500 text-xs mt-1">Donors</p>
+          <div className="grid grid-cols-3 gap-3 mt-4 px-4">
+            <div className="bg-white rounded-2xl py-4 px-2 text-center shadow-md">
+              <p className="text-red-600 font-extrabold text-3xl leading-none">
+                {donorCount}
+              </p>
+              <p className="text-gray-500 text-xs mt-2 font-medium">
+                Donors
+              </p>
             </div>
-            <div className="bg-white rounded-2xl p-4 text-center shadow-sm">
-              <p className="text-red-600 font-bold text-3xl">{myRequestCount}</p>
-              <p className="text-gray-500 text-xs mt-1">My Requests</p>
+
+            <div className="bg-white rounded-2xl py-4 px-2 text-center shadow-md">
+              <p className="text-red-600 font-extrabold text-3xl leading-none">
+                {myRequestCount}
+              </p>
+              <p className="text-gray-500 text-xs mt-2 font-medium">
+                My Requests
+              </p>
             </div>
-            <div className="bg-white rounded-2xl p-4 text-center shadow-sm">
-              <p className="text-red-600 font-bold text-3xl">{emergencyCount}</p>
-              <p className="text-gray-500 text-xs mt-1">Emergencies</p>
+
+            <div className="bg-white rounded-2xl py-4 px-2 text-center shadow-md">
+              <p className="text-red-600 font-extrabold text-3xl leading-none">
+                {emergencyCount}
+              </p>
+              <p className="text-gray-500 text-xs mt-2 font-medium">
+                Emergencies
+              </p>
             </div>
           </div>
         </div>
@@ -266,12 +338,12 @@ export default function Dashboard() {
           </button>
         </div>
 
-        {userProfile && userProfile.isDonor && nextBadgeTarget && (
+        {userProfile && userProfile.isDonor && badgeEmoji && (
           <div className="bg-white rounded-2xl shadow-sm p-4">
             <div className="flex items-center justify-between gap-3 mb-2">
               <div>
                 <p className="text-xs uppercase tracking-wide text-gray-400">Badge progress</p>
-                <p className="text-sm font-semibold text-gray-800">{badgeMeta.emoji} {badgeMeta.name}</p>
+                <p className="text-sm font-semibold text-gray-800">{badgeEmoji} {badgeLabel}</p>
               </div>
               <button
                 onClick={() => navigate("/certifications")}
@@ -287,7 +359,7 @@ export default function Dashboard() {
               ></div>
             </div>
             <p className="text-xs text-gray-500 mt-2">
-              {Math.max(nextBadgeTarget - completedDonations, 0)} more donations to reach {nextBadgeName}
+              {nextBadgeTarget === null ? "You reached the highest badge level." : Math.max(nextBadgeTarget - donationCount, 0) + " more donations to reach the next badge."}
             </p>
           </div>
         )}

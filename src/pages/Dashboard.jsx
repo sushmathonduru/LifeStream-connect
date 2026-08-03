@@ -53,7 +53,9 @@ export default function Dashboard() {
     const unsubscribeUsers = onValue(ref(db, "users"), (snap) => {
       const data = snap.val()
       if (data) {
-        const donors = Object.values(data).filter((u) => u.isDonor === true)
+        const donors = Object.values(data).filter(function (user) {
+          return user && user.isDonor === true
+        })
         setDonorCount(donors.length)
       } else {
         setDonorCount(0)
@@ -63,14 +65,18 @@ export default function Dashboard() {
     const unsubscribeRequests = onValue(ref(db, "requests"), (snap) => {
       const data = snap.val()
       if (data) {
-        const all = Object.entries(data).map(([id, r]) => ({ id, ...r }))
-        const mine = all.filter((r) => r.userId === currentUser.uid)
-        const available = all.filter(
-          (r) => r.status === "pending" && r.userId !== currentUser.uid
-        )
-        const completed = all.filter(
-          (r) => r.donorId === currentUser.uid && r.status === "completed"
-        )
+        const all = Object.entries(data).map(function ([id, request]) {
+          return { id: id, ...request }
+        })
+        const mine = all.filter(function (request) {
+          return request.userId === currentUser.uid
+        })
+        const available = all.filter(function (request) {
+          return request.status === "pending" && request.userId !== currentUser.uid
+        })
+        const completed = all.filter(function (request) {
+          return request.donorId === currentUser.uid && request.status === "completed"
+        })
 
         setMyRequestCount(mine.length)
         setAvailableRequests(available)
@@ -85,14 +91,16 @@ export default function Dashboard() {
     const unsubscribeEmergency = onValue(ref(db, "emergency"), (snap) => {
       const data = snap.val()
       if (data) {
-        const active = Object.values(data).filter((e) => e.status === "active")
+        const active = Object.values(data).filter(function (item) {
+          return item && item.status === "active"
+        })
         setEmergencyCount(active.length)
       } else {
         setEmergencyCount(0)
       }
     })
 
-    return () => {
+    return function () {
       unsubscribeUser()
       unsubscribeUsers()
       unsubscribeRequests()
@@ -143,9 +151,9 @@ export default function Dashboard() {
     day: "numeric"
   })
 
-  const matchingRequests = availableRequests.filter((r) => {
+  const matchingRequests = availableRequests.filter(function (request) {
     if (!userProfile || !userProfile.bloodGroup) return true
-    return r.bloodGroup === userProfile.bloodGroup
+    return request.bloodGroup === userProfile.bloodGroup
   })
 
   const badgeMeta = getBadgeMeta(completedDonations)
@@ -179,7 +187,7 @@ export default function Dashboard() {
               {userProfile && userProfile.isDonor && (
                 <button
                   onClick={() => navigate("/certifications")}
-                  className="bg-white bg-opacity-15 text-white text-xs px-3 py-1.5 rounded-full mt-2 inline-flex items-center gap-2 border border-white border-opacity-20"
+                  className="flex items-center gap-1 bg-white bg-opacity-20 border border-white border-opacity-30 text-white text-xs px-3 py-1.5 rounded-full mt-2"
                 >
                   <span>{badgeMeta.emoji}</span>
                   <span>{badgeMeta.name}</span>
@@ -194,18 +202,18 @@ export default function Dashboard() {
             </button>
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            <div className="bg-white bg-opacity-20 rounded-2xl p-3 text-center">
-              <p className="text-white font-bold text-2xl">{donorCount}</p>
-              <p className="text-red-200 text-xs mt-1">Donors</p>
+          <div className="grid grid-cols-3 gap-3 mt-4">
+            <div className="bg-white rounded-2xl p-4 text-center shadow-sm">
+              <p className="text-red-600 font-bold text-3xl">{donorCount}</p>
+              <p className="text-gray-500 text-xs mt-1">Donors</p>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-2xl p-3 text-center">
-              <p className="text-white font-bold text-2xl">{myRequestCount}</p>
-              <p className="text-red-200 text-xs mt-1">My Requests</p>
+            <div className="bg-white rounded-2xl p-4 text-center shadow-sm">
+              <p className="text-red-600 font-bold text-3xl">{myRequestCount}</p>
+              <p className="text-gray-500 text-xs mt-1">My Requests</p>
             </div>
-            <div className="bg-white bg-opacity-20 rounded-2xl p-3 text-center">
-              <p className="text-white font-bold text-2xl">{emergencyCount}</p>
-              <p className="text-red-200 text-xs mt-1">Emergencies</p>
+            <div className="bg-white rounded-2xl p-4 text-center shadow-sm">
+              <p className="text-red-600 font-bold text-3xl">{emergencyCount}</p>
+              <p className="text-gray-500 text-xs mt-1">Emergencies</p>
             </div>
           </div>
         </div>
@@ -290,35 +298,37 @@ export default function Dashboard() {
               Available Requests for You
             </p>
             <div className="space-y-3">
-              {matchingRequests.slice(0, 3).map((req) => (
-                <div
-                  key={req.id}
-                  className="bg-gray-50 rounded-xl p-3 flex items-center gap-3"
-                >
-                  <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-red-600 font-bold text-xs">
-                      {req.bloodGroup}
-                    </span>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-800 truncate">
-                      {req.patientName}
-                    </p>
-                    <p className="text-xs text-gray-500 truncate">
-                      {req.hospital} — {req.city}
-                    </p>
-                    <p className="text-xs text-gray-400">
-                      {req.units} unit(s) needed
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => acceptRequest(req)}
-                    className="bg-red-600 text-white text-xs font-semibold px-3 py-2 rounded-xl flex-shrink-0"
+              {matchingRequests.slice(0, 3).map(function (req) {
+                return (
+                  <div
+                    key={req.id}
+                    className="bg-gray-50 rounded-xl p-3 flex items-center gap-3"
                   >
-                    Accept
-                  </button>
-                </div>
-              ))}
+                    <div className="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-red-600 font-bold text-xs">
+                        {req.bloodGroup}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-gray-800 truncate">
+                        {req.patientName}
+                      </p>
+                      <p className="text-xs text-gray-500 truncate">
+                        {req.hospital} — {req.city}
+                      </p>
+                      <p className="text-xs text-gray-400">
+                        {req.units} unit(s) needed
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => acceptRequest(req)}
+                      className="bg-red-600 text-white text-xs font-semibold px-3 py-2 rounded-xl flex-shrink-0"
+                    >
+                      Accept
+                    </button>
+                  </div>
+                )
+              })}
             </div>
           </div>
         )}

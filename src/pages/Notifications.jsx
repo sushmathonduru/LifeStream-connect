@@ -9,6 +9,8 @@ export default function Notifications() {
   const [notifications, setNotifications] = useState([])
   const [loading, setLoading] = useState(true)
   const [nowTimestamp, setNowTimestamp] = useState(() => Date.now())
+  const [toast, setToast] = useState(null)
+  const [prevCount, setPrevCount] = useState(0)
   const { currentUser } = useAuth()
 
   useEffect(() => {
@@ -16,7 +18,9 @@ export default function Notifications() {
       setNowTimestamp(Date.now())
     }, 60000)
 
-    return () => clearInterval(timer)
+    return function () {
+      clearInterval(timer)
+    }
   }, [])
 
   useEffect(() => {
@@ -26,16 +30,34 @@ export default function Notifications() {
       const data = snapshot.val()
       if (data) {
         const list = Object.entries(data)
-          .map(([id, notif]) => ({ id, ...notif }))
-          .sort((a, b) => b.createdAt - a.createdAt)
+          .map(function ([id, notif]) {
+            return { id: id, ...notif }
+          })
+          .sort(function (a, b) {
+            return b.createdAt - a.createdAt
+          })
+        const unreadList = list.filter(function (item) {
+          return !item.read
+        })
+        if (unreadList.length > prevCount && prevCount !== 0) {
+          const newest = unreadList[0]
+          setToast(newest)
+          setTimeout(function () {
+            setToast(null)
+          }, 4000)
+        }
+        setPrevCount(unreadList.length)
         setNotifications(list)
       } else {
         setNotifications([])
+        setPrevCount(0)
       }
       setLoading(false)
     })
-    return () => unsubscribe()
-  }, [currentUser])
+    return function () {
+      unsubscribe()
+    }
+  }, [currentUser, prevCount])
 
   function formatTime(timestamp) {
     if (!timestamp) return ""
@@ -82,15 +104,46 @@ export default function Notifications() {
     return "border-l-4 border-blue-500 bg-blue-50"
   }
 
-  const unreadCount = notifications.filter((n) => !n.read).length
+  const unreadCount = notifications.filter(function (notification) {
+    return !notification.read
+  }).length
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
+      {toast && (
+        <div className={
+          "fixed top-4 left-4 right-4 z-50 rounded-2xl p-4 " +
+          "shadow-xl flex items-start gap-3 animate-bounce " +
+          (toast.type === "alert"
+            ? "bg-red-600 text-white"
+            : "bg-green-600 text-white")
+        }>
+          <span className="text-2xl flex-shrink-0">
+            {toast.type === "alert" ? "🚨" : "✅"}
+          </span>
+          <div className="flex-1">
+            <p className="font-bold text-sm">{toast.title}</p>
+            <p className="text-xs opacity-90 mt-0.5">{toast.message}</p>
+          </div>
+          <button
+            onClick={() => setToast(null)}
+            className="text-white opacity-70 text-lg"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 pt-12 pb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
+            <div className="relative w-10 h-10 bg-white rounded-full flex items-center justify-center">
               <Bell className="text-red-600" size={22} />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-red-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
             </div>
             <div>
               <h1 className="text-white text-xl font-bold">Notifications</h1>
@@ -129,48 +182,50 @@ export default function Notifications() {
         )}
 
         {!loading &&
-          notifications.map((notif) => (
-            <div
-              key={notif.id}
-              onClick={() => markAsRead(notif.id)}
-              className={
-                "rounded-2xl p-4 cursor-pointer transition-all " +
-                getBorderColor(notif.type) +
-                (!notif.read ? " shadow-sm" : " opacity-70")
-              }
-            >
-              <div className="flex items-start gap-3">
-                <div className="flex-shrink-0 mt-0.5">
-                  {getIcon(notif.type)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <p className={
-                      "text-sm " + (!notif.read ? "font-semibold text-gray-800" : "font-medium text-gray-600")
-                    }>
-                      {notif.title}
-                    </p>
-                    {!notif.read && (
-                      <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 mt-1.5"></div>
-                    )}
+          notifications.map(function (notif) {
+            return (
+              <div
+                key={notif.id}
+                onClick={() => markAsRead(notif.id)}
+                className={
+                  "rounded-2xl p-4 cursor-pointer transition-all " +
+                  getBorderColor(notif.type) +
+                  (!notif.read ? " shadow-sm" : " opacity-70")
+                }
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 mt-0.5">
+                    {getIcon(notif.type)}
                   </div>
-                  <p className="text-xs text-gray-500 mt-0.5">{notif.message}</p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    {formatTime(notif.createdAt)}
-                  </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className={
+                        "text-sm " + (!notif.read ? "font-semibold text-gray-800" : "font-medium text-gray-600")
+                      }>
+                        {notif.title}
+                      </p>
+                      {!notif.read && (
+                        <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 mt-1.5"></div>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5">{notif.message}</p>
+                    <p className="text-xs text-gray-400 mt-1">
+                      {formatTime(notif.createdAt)}
+                    </p>
+                  </div>
+                  <button
+                    onClick={function (e) {
+                      e.stopPropagation()
+                      deleteNotif(notif.id)
+                    }}
+                    className="text-gray-300 hover:text-gray-500 text-xs flex-shrink-0"
+                  >
+                    ✕
+                  </button>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    deleteNotif(notif.id)
-                  }}
-                  className="text-gray-300 hover:text-gray-500 text-xs flex-shrink-0"
-                >
-                  ✕
-                </button>
               </div>
-            </div>
-          ))}
+            )
+          })}
       </div>
 
       <BottomNav />

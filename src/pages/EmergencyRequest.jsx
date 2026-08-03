@@ -10,7 +10,7 @@ const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
 const urgencyLevels = [
   { label: "Critical", style: "bg-red-600 text-white border-red-600" },
   { label: "High", style: "bg-orange-500 text-white border-orange-500" },
-  { label: "Medium", style: "bg-yellow-500 text-white border-yellow-500" },
+  { label: "Medium", style: "bg-yellow-500 text-white border-yellow-500" }
 ]
 
 export default function EmergencyRequest() {
@@ -31,10 +31,12 @@ export default function EmergencyRequest() {
     onValue(usersRef, (snapshot) => {
       const data = snapshot.val()
       if (data) {
-        const donors = Object.values(data).filter(
-          (u) => u.isDonor === true && u.available === true
-        )
+        const donors = Object.values(data).filter(function (user) {
+          return user && user.isDonor === true && user.available === true
+        })
         setDonorCount(donors.length)
+      } else {
+        setDonorCount(0)
       }
     })
   }, [])
@@ -49,35 +51,36 @@ export default function EmergencyRequest() {
       setLoading(true)
       const emergencyRef = await push(ref(db, "emergency"), {
         bloodGroup: selectedGroup,
-        city,
-        hospital,
-        units,
-        urgency,
+        city: city,
+        hospital: hospital,
+        units: units,
+        urgency: urgency,
         userId: currentUser.uid,
         status: "active",
-        createdAt: Date.now(),
+        createdAt: Date.now()
       })
       const emergencyId = emergencyRef.key
-      const usersSnapshot = await new Promise((resolve) => {
-        onValue(ref(db, "users"), (snap) => resolve(snap), { onlyOnce: true })
+      const usersSnapshot = await new Promise(function (resolve) {
+        onValue(ref(db, "users"), function (snap) {
+          resolve(snap)
+        }, { onlyOnce: true })
       })
       const users = usersSnapshot.val()
       let notifiedCount = 0
       if (users) {
-        const donorEntries = Object.entries(users).filter(
-          ([uid, user]) =>
-            user.isDonor === true &&
-            user.available === true &&
-            uid !== currentUser.uid
-        )
+        const donorEntries = Object.entries(users).filter(function ([uid, user]) {
+          return user.isDonor === true && uid !== currentUser.uid
+        })
         for (const [uid] of donorEntries) {
           await push(ref(db, "notifications/" + uid), {
             type: "alert",
-            title: "EMERGENCY: " + selectedGroup + " Blood Needed!",
-            message: urgency + " - " + hospital + " in " + city + " needs " + units + " unit(s)",
+            title: "🚨 EMERGENCY: " + selectedGroup + " Blood Needed!",
+            message: urgency + " - " + hospital +
+              " in " + city + " needs " + units + " unit(s). " +
+              "Please respond immediately!",
             read: false,
             createdAt: Date.now(),
-            emergencyId: emergencyId,
+            emergencyId: emergencyId
           })
           notifiedCount++
         }
@@ -88,7 +91,9 @@ export default function EmergencyRequest() {
       setCity("")
       setHospital("")
       setUnits("1")
-      setTimeout(() => setSent(false), 6000)
+      setTimeout(function () {
+        setSent(false)
+      }, 6000)
     } catch (err) {
       setError("Failed to broadcast. Please try again.")
       console.log("Emergency error:", err)
@@ -146,20 +151,22 @@ export default function EmergencyRequest() {
             Select Blood Group *
           </p>
           <div className="grid grid-cols-4 gap-2">
-            {bloodGroups.map((g) => (
-              <button
-                key={g}
-                onClick={() => setSelectedGroup(g)}
-                className={
-                  "py-2.5 rounded-xl text-sm font-bold border-2 transition-all " +
-                  (selectedGroup === g
-                    ? "bg-red-600 text-white border-red-600 shadow-md"
-                    : "bg-gray-50 text-gray-700 border-gray-200")
-                }
-              >
-                {g}
-              </button>
-            ))}
+            {bloodGroups.map(function (group) {
+              return (
+                <button
+                  key={group}
+                  onClick={() => setSelectedGroup(group)}
+                  className={
+                    "py-2.5 rounded-xl text-sm font-bold border-2 transition-all " +
+                    (selectedGroup === group
+                      ? "bg-red-600 text-white border-red-600 shadow-md"
+                      : "bg-gray-50 text-gray-700 border-gray-200")
+                  }
+                >
+                  {group}
+                </button>
+              )
+            })}
           </div>
         </div>
 
@@ -168,20 +175,22 @@ export default function EmergencyRequest() {
             Urgency Level
           </p>
           <div className="flex gap-2">
-            {urgencyLevels.map(({ label, style }) => (
-              <button
-                key={label}
-                onClick={() => setUrgency(label)}
-                className={
-                  "flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all " +
-                  (urgency === label
-                    ? style
-                    : "bg-gray-50 text-gray-500 border-gray-200")
-                }
-              >
-                {label}
-              </button>
-            ))}
+            {urgencyLevels.map(function (item) {
+              return (
+                <button
+                  key={item.label}
+                  onClick={() => setUrgency(item.label)}
+                  className={
+                    "flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all " +
+                    (urgency === item.label
+                      ? item.style
+                      : "bg-gray-50 text-gray-500 border-gray-200")
+                  }
+                >
+                  {item.label}
+                </button>
+              )
+            })}
           </div>
         </div>
 

@@ -136,6 +136,7 @@ export default function Certifications() {
   const [completedDonations, setCompletedDonations] = useState(0)
   const [isDonor, setIsDonor] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     if (!currentUser) return
@@ -152,9 +153,9 @@ export default function Certifications() {
     const unsubscribeRequests = onValue(ref(db, "requests"), (snapshot) => {
       const data = snapshot.val()
       if (data) {
-        const donations = Object.values(data).filter(
-          (request) => request.donorId === currentUser.uid && request.status === "completed"
-        )
+        const donations = Object.values(data).filter(function (request) {
+          return request.donorId === currentUser.uid && request.status === "completed"
+        })
         setCompletedDonations(donations.length)
       } else {
         setCompletedDonations(0)
@@ -162,7 +163,7 @@ export default function Certifications() {
       setLoading(false)
     })
 
-    return () => {
+    return function () {
       unsubscribeProfile()
       unsubscribeRequests()
     }
@@ -190,35 +191,37 @@ export default function Certifications() {
   }, [completedDonations, currentBadge, nextBadge])
 
   const nextDonationTarget = nextBadge ? Math.max(nextBadge.min - completedDonations, 0) : 0
+  const badgeLabel = currentBadge ? currentBadge.name : "New Donor"
+  const badgeEmoji = currentBadge ? currentBadge.emoji : "🏅"
+  const donationCount = completedDonations
 
   async function handleShare() {
-    const badgeName = currentBadge ? currentBadge.name : "New Donor"
-    const shareText = "I have completed " + completedDonations + " blood donations on Lifestream Connect! Badge: " + badgeName + " 🩸"
+    const text = "I have completed " + donationCount +
+      " blood donations on Lifestream Connect! " +
+      "Badge: " + badgeLabel + " " + badgeEmoji +
+      " 🩸 #LifestreamConnect #BloodDonation"
 
     if (navigator.share) {
       try {
         await navigator.share({
-          title: "Lifestream Connect Achievement",
-          text: shareText
+          title: "My Lifestream Connect Achievement",
+          text: text,
+          url: "https://life-stream-connect.vercel.app"
         })
-        return
-      } catch (error) {
-        console.log("Share cancelled:", error)
+      } catch (err) {
+        console.log("Share cancelled")
       }
-    }
-
-    if (navigator.clipboard) {
+    } else {
       try {
-        await navigator.clipboard.writeText(shareText)
-        alert("Copied!")
-      } catch (error) {
-        console.log("Clipboard error:", error)
-        alert("Copied!")
+        await navigator.clipboard.writeText(text)
+        setCopied(true)
+        setTimeout(function () {
+          setCopied(false)
+        }, 3000)
+      } catch (err) {
+        alert("Copy this: " + text)
       }
-      return
     }
-
-    alert("Copied!")
   }
 
   if (loading) {
@@ -295,7 +298,7 @@ export default function Certifications() {
                 <h3 className="text-lg font-semibold text-gray-800">All Badges</h3>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {BADGES.map((badge) => {
+                {BADGES.map(function (badge) {
                   const earned = completedDonations >= badge.min
                   const badgeCount = badge.min === 20 ? "20+" : badge.min + "-" + badge.max
                   return (
@@ -336,7 +339,7 @@ export default function Certifications() {
                 <h3 className="text-lg font-semibold text-gray-800">Achievements</h3>
               </div>
               <div className="space-y-3">
-                {ACHIEVEMENTS.map((achievement) => {
+                {ACHIEVEMENTS.map(function (achievement) {
                   const earned = completedDonations >= achievement.threshold
                   return (
                     <div
@@ -363,11 +366,18 @@ export default function Certifications() {
             <div className="bg-white rounded-3xl shadow-sm p-5">
               <button
                 onClick={handleShare}
-                className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2"
               >
-                <ShareIcon />
-                Share My Achievement
+                <span className="text-xl">📤</span>
+                <span>Share My Achievement</span>
               </button>
+              {copied && (
+                <div className="bg-green-50 border border-green-200 rounded-xl p-3 text-center mt-3">
+                  <p className="text-green-600 text-sm font-medium">
+                    ✅ Achievement copied to clipboard!
+                  </p>
+                </div>
+              )}
             </div>
           </>
         )}
@@ -375,17 +385,5 @@ export default function Certifications() {
 
       <BottomNav />
     </div>
-  )
-}
-
-function ShareIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
-      <path d="M15 8a3 3 0 1 0-2.83-4H12a3 3 0 0 0 0 6h.17A3 3 0 0 0 15 8Z" />
-      <path d="M6 14a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" />
-      <path d="M18 18a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z" />
-      <path d="m8.5 15.5 7-5" />
-      <path d="m15.5 8.5-7 5" />
-    </svg>
   )
 }

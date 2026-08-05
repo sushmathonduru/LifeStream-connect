@@ -11,11 +11,11 @@ export default function BottomNav() {
   const { currentUser } = useAuth()
   const [unreadCount, setUnreadCount] = useState(0)
 
-  useEffect(() => {
+  useEffect(function () {
     if (!currentUser) return
 
     const notifRef = ref(db, "notifications/" + currentUser.uid)
-    const unsubscribe = onValue(notifRef, (snapshot) => {
+    const unsubscribe = onValue(notifRef, function (snapshot) {
       const data = snapshot.val()
       if (data) {
         const unread = Object.values(data).filter(function (item) {
@@ -32,79 +32,224 @@ export default function BottomNav() {
     }
   }, [currentUser])
 
-  const tabs = [
+  const navItems = [
     { icon: Home, label: "Home", path: "/dashboard" },
     { icon: Search, label: "Find", path: "/find-donor" },
     { icon: AlertCircle, label: "Emergency", path: "/emergency" },
     { icon: Trophy, label: "Badges", path: "/certifications" },
     { icon: Bell, label: "Alerts", path: "/notifications" },
-    { icon: User, label: "Profile", path: "/profile" }
+    { icon: User, label: "Profile", path: "/profile" },
   ]
 
-  const sidebar = (
-    <aside className="hidden md:flex fixed left-0 top-0 h-full w-20 bg-white shadow-lg flex-col items-center py-8 gap-6 z-40 border-r border-gray-100">
-      {tabs.map(function ({ icon: Icon, label, path }) {
-        const active = location.pathname === path
-        const isAlertsTab = path === "/notifications"
-
-        return (
-          <button
-            key={path}
-            onClick={() => navigate(path)}
-            className="flex flex-col items-center gap-1 text-xs relative"
-          >
-            <div
-              className={
-                active
-                  ? "w-11 h-11 rounded-2xl bg-red-50 flex items-center justify-center text-red-600 shadow-sm relative"
-                  : "w-11 h-11 rounded-2xl bg-gray-50 flex items-center justify-center text-gray-400 relative"
-              }
-            >
-              <Icon size={20} />
-              {isAlertsTab && unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold">
-                  {unreadCount > 9 ? "9+" : unreadCount}
-                </span>
-              )}
-            </div>
-            <span className={active ? "font-semibold text-red-600" : "font-medium text-gray-500"}>{label}</span>
-          </button>
-        )
-      })}
-    </aside>
-  )
-
-  const mobile = (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 flex md:hidden justify-around items-center py-2 z-50 shadow-lg">
-      {tabs.map(function ({ icon: Icon, label, path }) {
-        const active = location.pathname === path
-        const isAlertsTab = path === "/notifications"
-
-        return (
-          <button
-            key={path}
-            onClick={() => navigate(path)}
-            className="flex flex-col items-center gap-0.5 px-2 py-1 relative"
-          >
-            <div className="relative">
-              <Icon size={20} className={active ? "text-red-600" : "text-gray-400"} />
-              {isAlertsTab && unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold">
-                  {unreadCount > 9 ? "9+" : unreadCount}
-                </span>
-              )}
-            </div>
-            <span className={active ? "text-[10px] font-medium text-red-600" : "text-[10px] font-medium text-gray-400"}>{label}</span>
-          </button>
-        )
-      })}
-    </nav>
-  )
+  const isActive = function (path) {
+    return location.pathname === path
+  }
 
   return (
     <>
-      {sidebar}
-      {mobile}
+      <div
+        className="hidden md:flex flex-col"
+        style={{
+          width: "240px",
+          minHeight: "100vh",
+          backgroundColor: "white",
+          borderRight: "1px solid #f3f4f6",
+          boxShadow: "2px 0 8px rgba(0,0,0,0.06)",
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        <div
+          style={{
+            padding: "24px 20px 16px 20px",
+            borderBottom: "1px solid #f3f4f6",
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <div
+              style={{
+                width: "40px",
+                height: "40px",
+                backgroundColor: "#dc2626",
+                borderRadius: "12px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "20px",
+              }}
+            >
+              🩸
+            </div>
+            <div>
+              <p
+                style={{
+                  fontWeight: "700",
+                  fontSize: "14px",
+                  color: "#1f2937",
+                  lineHeight: "1.2",
+                }}
+              >
+                Lifestream
+              </p>
+              <p
+                style={{
+                  fontSize: "11px",
+                  color: "#9ca3af",
+                }}
+              >
+                Connect
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            flex: 1,
+            padding: "12px 12px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "4px",
+          }}
+        >
+          {navItems.map(function (item) {
+            const Icon = item.icon
+            const active = isActive(item.path)
+            return (
+              <button
+                key={item.path}
+                onClick={() => navigate(item.path)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                  padding: "12px 16px",
+                  borderRadius: "12px",
+                  border: "none",
+                  cursor: "pointer",
+                  width: "100%",
+                  textAlign: "left",
+                  backgroundColor: active ? "#fef2f2" : "transparent",
+                  color: active ? "#dc2626" : "#6b7280",
+                  fontWeight: active ? "600" : "500",
+                  fontSize: "14px",
+                  transition: "all 0.15s ease",
+                }}
+              >
+                <div style={{ position: "relative" }}>
+                  <Icon size={20} />
+                  {item.label === "Alerts" && unreadCount > 0 && (
+                    <span
+                      style={{
+                        position: "absolute",
+                        top: "-4px",
+                        right: "-4px",
+                        width: "14px",
+                        height: "14px",
+                        backgroundColor: "#ef4444",
+                        borderRadius: "50%",
+                        fontSize: "9px",
+                        color: "white",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontWeight: "700",
+                      }}
+                    >
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
+                </div>
+                <span>{item.label}</span>
+                {active && (
+                  <div
+                    style={{
+                      marginLeft: "auto",
+                      width: "6px",
+                      height: "6px",
+                      backgroundColor: "#dc2626",
+                      borderRadius: "50%",
+                    }}
+                  ></div>
+                )}
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div
+        className="md:hidden"
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "white",
+          borderTop: "1px solid #f3f4f6",
+          boxShadow: "0 -4px 12px rgba(0,0,0,0.08)",
+          zIndex: 50,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-around",
+          padding: "8px 0",
+        }}
+      >
+        {navItems.map(function (item) {
+          const Icon = item.icon
+          const active = isActive(item.path)
+          return (
+            <button
+              key={item.path}
+              onClick={() => navigate(item.path)}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "3px",
+                padding: "4px 8px",
+                border: "none",
+                background: "none",
+                cursor: "pointer",
+                color: active ? "#dc2626" : "#9ca3af",
+              }}
+            >
+              <div style={{ position: "relative" }}>
+                <Icon size={20} />
+                {item.label === "Alerts" && unreadCount > 0 && (
+                  <span
+                    style={{
+                      position: "absolute",
+                      top: "-4px",
+                      right: "-4px",
+                      width: "12px",
+                      height: "12px",
+                      backgroundColor: "#ef4444",
+                      borderRadius: "50%",
+                      fontSize: "8px",
+                      color: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: "700",
+                    }}
+                  >
+                    {unreadCount > 9 ? "9" : unreadCount}
+                  </span>
+                )}
+              </div>
+              <span
+                style={{
+                  fontSize: "10px",
+                  fontWeight: active ? "600" : "500",
+                }}
+              >
+                {item.label}
+              </span>
+            </button>
+          )
+        })}
+      </div>
     </>
   )
 }

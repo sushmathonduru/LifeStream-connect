@@ -1,45 +1,107 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import ProtectedRoute from "./components/ProtectedRoute";
-import SplashScreen from "./pages/SplashScreen";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import ForgotPassword from "./pages/ForgotPassword";
-import Dashboard from "./pages/Dashboard";
-import Certifications from "./pages/Certifications";
-import RequestBlood from "./pages/RequestBlood";
-import EmergencyRequest from "./pages/EmergencyRequest";
-import FindDonor from "./pages/FindDonor";
-import MyRequests from "./pages/MyRequests";
-import LiveTracking from "./pages/LiveTracking";
-import DonorTracking from "./pages/DonorTracking";
-import Notifications from "./pages/Notifications";
-import Profile from "./pages/Profile";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { AuthProvider } from "./context/AuthContext"
+import ProtectedRoute from "./components/ProtectedRoute"
+import BottomNav from "./components/BottomNav"
+import { useLocation } from "react-router-dom"
+
+import SplashScreen from "./pages/SplashScreen"
+import Login from "./pages/Login"
+import Signup from "./pages/Signup"
+import ForgotPassword from "./pages/ForgotPassword"
+import Dashboard from "./pages/Dashboard"
+import RequestBlood from "./pages/RequestBlood"
+import EmergencyRequest from "./pages/EmergencyRequest"
+import FindDonor from "./pages/FindDonor"
+import MyRequests from "./pages/MyRequests"
+import LiveTracking from "./pages/LiveTracking"
+import DonorTracking from "./pages/DonorTracking"
+import Notifications from "./pages/Notifications"
+import Profile from "./pages/Profile"
+import Certifications from "./pages/Certifications"
+
+const publicPaths = ["/", "/login", "/signup", "/forgot-password"]
+
+function AppLayout() {
+  const location = useLocation()
+  const isPublic = publicPaths.includes(location.pathname)
+
+  if (isPublic) {
+    return (
+      <Routes>
+        <Route path="/" element={<SplashScreen />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    )
+  }
+
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "stretch",
+        minHeight: "100vh",
+        width: "100%",
+        margin: 0,
+        padding: 0,
+        gap: 0,
+      }}
+    >
+      <div
+        className="hidden md:block"
+        style={{
+          width: "240px",
+          minWidth: "240px",
+          maxWidth: "240px",
+          minHeight: "100vh",
+          flexShrink: 0,
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        <BottomNav />
+      </div>
+
+      <div
+        style={{
+          flex: 1,
+          minHeight: "100vh",
+          width: "calc(100% - 240px)",
+          overflowY: "auto",
+          margin: 0,
+          padding: 0,
+        }}
+      >
+        <Routes>
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/request-blood" element={<ProtectedRoute><RequestBlood /></ProtectedRoute>} />
+          <Route path="/emergency" element={<ProtectedRoute><EmergencyRequest /></ProtectedRoute>} />
+          <Route path="/find-donor" element={<ProtectedRoute><FindDonor /></ProtectedRoute>} />
+          <Route path="/my-requests" element={<ProtectedRoute><MyRequests /></ProtectedRoute>} />
+          <Route path="/live-tracking" element={<ProtectedRoute><LiveTracking /></ProtectedRoute>} />
+          <Route path="/donor-tracking" element={<ProtectedRoute><DonorTracking /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/certifications" element={<ProtectedRoute><Certifications /></ProtectedRoute>} />
+          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        </Routes>
+
+        <div className="md:hidden">
+          <BottomNav />
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="min-h-screen w-full bg-gray-100">
-          <Routes>
-            <Route path="/" element={<SplashScreen />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/certifications" element={<ProtectedRoute><Certifications /></ProtectedRoute>} />
-            <Route path="/request-blood" element={<ProtectedRoute><RequestBlood /></ProtectedRoute>} />
-            <Route path="/emergency" element={<ProtectedRoute><EmergencyRequest /></ProtectedRoute>} />
-            <Route path="/find-donor" element={<ProtectedRoute><FindDonor /></ProtectedRoute>} />
-            <Route path="/my-requests" element={<ProtectedRoute><MyRequests /></ProtectedRoute>} />
-            <Route path="/live-tracking" element={<ProtectedRoute><LiveTracking /></ProtectedRoute>} />
-            <Route path="/donor-tracking" element={<ProtectedRoute><DonorTracking /></ProtectedRoute>} />
-            <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </div>
-      </Router>
-    </AuthProvider>
-  );
+    <BrowserRouter>
+      <AuthProvider>
+        <AppLayout />
+      </AuthProvider>
+    </BrowserRouter>
+  )
 }

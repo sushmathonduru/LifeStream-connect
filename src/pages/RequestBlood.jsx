@@ -83,7 +83,7 @@ export default function RequestBlood() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
       <div className="max-w-5xl mx-auto px-4 md:px-8 pt-10 pb-4">
         <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-gray-700 mb-4">
           <ArrowLeft size={20} /> Back

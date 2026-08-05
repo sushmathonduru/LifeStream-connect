@@ -112,7 +112,7 @@ export default function LiveTracking() {
 
   if (!requestId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6 pb-20 md:pb-0 md:ml-20">
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6 pb-20 md:pb-0">
         <MapPin className="text-gray-300 mb-4" size={64} />
         <h2 className="text-xl font-bold text-gray-600 mb-2">No Active Tracking</h2>
         <p className="text-gray-400 text-sm text-center mb-6">
@@ -130,7 +130,7 @@ export default function LiveTracking() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
       {/* Header */}
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-6">
         <button

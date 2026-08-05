@@ -103,7 +103,7 @@ export default function EmergencyRequest() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-6">
         <div className="max-w-5xl mx-auto flex items-center gap-3">
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center animate-pulse">

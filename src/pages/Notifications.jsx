@@ -109,7 +109,7 @@ export default function Notifications() {
   }).length
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
       {toast && (
         <div className={
           "fixed top-4 left-4 right-4 z-50 rounded-2xl p-4 " +

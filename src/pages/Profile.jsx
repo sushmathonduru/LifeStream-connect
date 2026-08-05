@@ -109,7 +109,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 md:ml-20">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-8">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg mb-3">

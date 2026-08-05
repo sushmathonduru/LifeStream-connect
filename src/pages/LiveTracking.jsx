@@ -6,7 +6,6 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
 import { ArrowLeft, Phone, MessageCircle, Clock, MapPin, Navigation } from "lucide-react"
-import BottomNav from "../components/BottomNav"
 
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
@@ -112,7 +111,7 @@ export default function LiveTracking() {
 
   if (!requestId) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6 pb-20 md:pb-0">
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-6">
         <MapPin className="text-gray-300 mb-4" size={64} />
         <h2 className="text-xl font-bold text-gray-600 mb-2">No Active Tracking</h2>
         <p className="text-gray-400 text-sm text-center mb-6">
@@ -124,13 +123,12 @@ export default function LiveTracking() {
         >
           Go to My Requests
         </button>
-        <BottomNav />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-6">
         <button
@@ -355,7 +353,6 @@ export default function LiveTracking() {
         )}
       </div>
 
-      <BottomNav />
     </div>
   )
 }

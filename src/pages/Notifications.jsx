@@ -3,7 +3,6 @@ import { useAuth } from "../context/AuthContext"
 import { db } from "../firebase/config"
 import { ref, onValue, update, remove } from "firebase/database"
 import { Bell, CheckCheck, AlertCircle, Info, Heart } from "lucide-react"
-import BottomNav from "../components/BottomNav"
 
 export default function Notifications() {
   const [notifications, setNotifications] = useState([])
@@ -109,7 +108,7 @@ export default function Notifications() {
   }).length
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gray-50">
       {toast && (
         <div className={
           "fixed top-4 left-4 right-4 z-50 rounded-2xl p-4 " +
@@ -228,7 +227,6 @@ export default function Notifications() {
           })}
       </div>
 
-      <BottomNav />
     </div>
   )
 }

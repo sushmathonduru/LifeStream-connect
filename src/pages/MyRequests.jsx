@@ -4,7 +4,6 @@ import { useAuth } from "../context/AuthContext"
 import { db } from "../firebase/config"
 import { ref, onValue } from "firebase/database"
 import { ChevronRight } from "lucide-react"
-import BottomNav from "../components/BottomNav"
 
 function getStatusStyle(status) {
   if (status === "pending") return "bg-yellow-100 text-yellow-700"
@@ -55,7 +54,7 @@ export default function MyRequests() {
   const currentRequests = activeTab === "active" ? activeRequests : completedRequests
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gray-50">
       <div className="max-w-5xl mx-auto px-4 md:px-8 pt-10 pb-4">
         <div className="flex items-center justify-between mb-5">
           <h1 className="text-2xl font-bold text-gray-900">My Requests</h1>
@@ -130,7 +129,6 @@ export default function MyRequests() {
           </div>
         )}
       </div>
-      <BottomNav />
     </div>
   )
 }

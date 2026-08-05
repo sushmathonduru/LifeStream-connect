@@ -4,7 +4,6 @@ import { useAuth } from "../context/AuthContext"
 import { db } from "../firebase/config"
 import { ref, onValue } from "firebase/database"
 import { Award, Check, Lock, Trophy } from "lucide-react"
-import BottomNav from "../components/BottomNav"
 
 const BADGES = [
   {
@@ -233,7 +232,7 @@ export default function Certifications() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gray-50">
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 lg:px-16 pt-12 pb-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center gap-3 mb-3">
@@ -383,7 +382,6 @@ export default function Certifications() {
         )}
       </div>
 
-      <BottomNav />
     </div>
   )
 }

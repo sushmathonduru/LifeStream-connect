@@ -4,7 +4,6 @@ import { useAuth } from "../context/AuthContext"
 import { db } from "../firebase/config"
 import { ref, onValue, update } from "firebase/database"
 import { Phone, Mail, MapPin, Droplets, LogOut, Edit, Check, X } from "lucide-react"
-import BottomNav from "../components/BottomNav"
 
 const bloodGroups = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]
 
@@ -109,7 +108,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-0">
+    <div className="min-h-screen bg-gray-50">
       <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-8">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
           <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg mb-3">
@@ -310,7 +309,6 @@ export default function Profile() {
         </button>
       </div>
 
-      <BottomNav />
     </div>
   )
 }

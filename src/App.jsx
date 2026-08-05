@@ -39,16 +39,13 @@ function AppLayout() {
       display: "flex",
       minHeight: "100vh",
       width: "100%",
-      background: "linear-gradient(180deg, #f8fafc 0%, #fdf2f2 100%)",
+      backgroundColor: "#f9fafb",
     }}>
       <div className="hidden md:block" style={{
-        width: "280px",
-        minWidth: "280px",
+        width: "260px",
+        minWidth: "260px",
         minHeight: "100vh",
         flexShrink: 0,
-        background: "rgba(255,255,255,0.72)",
-        backdropFilter: "blur(10px)",
-        boxShadow: "inset -1px 0 0 #e5e7eb",
       }}>
         <BottomNav />
       </div>

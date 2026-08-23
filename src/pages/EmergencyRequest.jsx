@@ -228,8 +228,7 @@ export default function EmergencyRequest() {
 
         <button
           onClick={handleBroadcast}
-          disabled={loading}
-          className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 rounded-2xl shadow-lg hover:from-red-700 hover:to-red-800 transition-all disabled:opacity-60 flex items-center justify-center gap-2 text-base"
+          className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 rounded-2xl shadow-lg hover:from-red-700 hover:to-red-800 transition-all flex items-center justify-center gap-2 text-base"
         >
           {loading ? (
             <>

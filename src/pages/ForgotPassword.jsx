@@ -123,8 +123,7 @@ export default function ForgotPassword() {
 
         <button
           onClick={handleReset}
-          disabled={loading}
-          className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 rounded-2xl shadow-lg disabled:opacity-60 flex items-center justify-center gap-2 mb-4"
+          className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 rounded-2xl shadow-lg flex items-center justify-center gap-2 mb-4"
         >
           {loading ? (
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>

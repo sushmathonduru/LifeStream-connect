@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { ArrowLeft, Droplets } from "lucide-react"
 import { db } from "../firebase/config"
@@ -208,8 +208,7 @@ export default function RequestBlood() {
 
           <button
             type="submit"
-            disabled={loading}
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-red-200/60 disabled:opacity-60 flex items-center justify-center gap-2 transition hover:brightness-105"
+            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-red-200/60 flex items-center justify-center gap-2 transition hover:brightness-105"
           >
             {loading ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />

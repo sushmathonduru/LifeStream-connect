@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { db } from "../firebase/config";
@@ -129,7 +129,7 @@ export default function Signup() {
             <p className="text-xs text-gray-600">You can always request blood even as a donor. Your donor status does not affect your ability to request blood for yourself.</p>
           </div>
 
-          <button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3 rounded-xl shadow-md disabled:opacity-60">
+          <button type="submit" className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3 rounded-xl shadow-md">
             {loading ? "Creating Account..." : "Create Account"}
           </button>
         </form>

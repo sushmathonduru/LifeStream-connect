@@ -192,7 +192,7 @@ export default function Profile() {
             </div>
             <button
               onClick={handleSaveProfile}
-              disabled={saving}
+
               className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2"
             >
               {saving ? (

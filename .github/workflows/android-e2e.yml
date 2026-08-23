@@ -37,9 +37,10 @@ jobs:
       - name: 4. Install Project Dependencies & Build Capacitor
         working-directory: ./Mobile
         run: |
+          npm install -g @capacitor/cli@8.5.0
           npm install --include=dev
           npm run build
-          npx cap add android || npx cap sync android
+          cap add android || cap sync android
           
       - name: 5. Build Debug APK
         working-directory: ./Mobile/android

@@ -16,7 +16,7 @@ permissions:
 jobs:
   e2e-automation:
     name: Build & Appium E2E
-    runs-on: macos-13 # macOS 13 (Intel) provides HAXM hardware acceleration for x86_64 Android emulators
+    runs-on: ubuntu-latest # Linux runners are 10x cheaper on quota and support KVM hardware acceleration for Android emulators
     
     steps:
       - name: 1. Checkout Repository

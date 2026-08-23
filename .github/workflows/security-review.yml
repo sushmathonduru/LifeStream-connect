@@ -34,7 +34,6 @@ jobs:
         uses: returntocorp/semgrep-action@v1
         with:
           config: "p/default"
-          generateSarif: "1"
           
       - name: 3. Trivy FS Scanner (Vulnerabilities & Misconfigurations)
         uses: aquasecurity/trivy-action@master

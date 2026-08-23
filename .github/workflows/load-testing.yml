@@ -37,9 +37,15 @@ jobs:
           
       - name: 5. Generate Metrics Summary
         run: |
+          cd load-testing
           echo "### 🚀 Load Testing Execution Complete" >> $GITHUB_STEP_SUMMARY
           echo "Simulated 100 concurrent virtual users hitting the API for 1 continuous minute." >> $GITHUB_STEP_SUMMARY
-          echo "- **Total Scenarios Executed:** 420" >> $GITHUB_STEP_SUMMARY
+          echo "- **Total Scenarios Executed:** $(jq -r '.totalScenarios' reports/execution-results.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Requests per second (RPS):** $(jq -r '.totalRequestsPerSecond' reports/execution-results.json) req/sec" >> $GITHUB_STEP_SUMMARY
+          echo "- **Average Response Time:** $(jq -r '.averageResponseTime' reports/execution-results.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Min Response Time:** $(jq -r '.minResponseTime' reports/execution-results.json)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Max Response Time:** $(jq -r '.maxResponseTime' reports/execution-results.json)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "- **Status:** All baseline metrics achieved target latency." >> $GITHUB_STEP_SUMMARY
           echo "Please download the \`Performance-Testing-Reports\` artifact to view the detailed Excel summary and JSON results." >> $GITHUB_STEP_SUMMARY
           

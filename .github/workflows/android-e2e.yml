@@ -34,19 +34,6 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
           
-      - name: 4. Install Project Dependencies & Build Capacitor
-        working-directory: ./Mobile
-        run: |
-          npm install --include=dev
-          npm run build
-          npx @capacitor/cli@8.5.0 add android || npx @capacitor/cli@8.5.0 sync android || true
-          
-      - name: 5. Build Debug APK
-        working-directory: ./Mobile/android
-        run: |
-          chmod +x ./gradlew
-          ./gradlew assembleDebug || true
-          
       - name: 6. Setup Automation Framework
         run: |
           cd automation

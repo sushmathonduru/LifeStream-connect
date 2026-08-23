@@ -16,7 +16,7 @@ permissions:
 jobs:
   e2e-automation:
     name: Build & Appium E2E
-    runs-on: ubuntu-latest # Linux runners are 10x cheaper on quota and support KVM hardware acceleration for Android emulators
+    runs-on: macos-13 # macOS 13 (Intel) provides HAXM hardware acceleration for x86_64 Android emulators
     
     steps:
       - name: 1. Checkout Repository
@@ -35,17 +35,15 @@ jobs:
           java-version: '17'
           
       - name: 4. Install Project Dependencies & Build Capacitor
+        working-directory: ./Mobile
         run: |
-          npm install -g @capacitor/cli@8.5.0
-          npm install
-          cd Mobile
           npm install --include=dev
           npm run build
-          cap add android || cap sync android
+          npx cap add android || npx cap sync android
           
       - name: 5. Build Debug APK
+        working-directory: ./Mobile/android
         run: |
-          cd Mobile/android
           chmod +x ./gradlew
           ./gradlew assembleDebug
           

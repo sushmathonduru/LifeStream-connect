@@ -1,0 +1,88 @@
+name: Phase 7 CI/CD Deployment and Selenium Testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+env:
+  BASE_URL: "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+
+jobs:
+  deploy-and-test:
+    name: Build, Deploy & E2E Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 1. Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 2. Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: 3. Install Project Dependencies
+        run: npm install
+          
+      - name: 4. Build Vite Application
+        run: npm run build
+        
+      - name: 5. Setup GitHub Pages deployment
+        uses: actions/configure-pages@v4
+        
+      - name: 6. Upload GitHub Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+          
+      - name: 7. Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        
+      - name: 8. Verify Deployment (HTTP 200 Polling)
+        run: |
+          echo "Waiting for deployment to be live at $BASE_URL..."
+          timeout 120 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $BASE_URL)" != "200" ]]; do sleep 5; done' || false
+          echo "Deployment verified. Starting E2E Tests!"
+          
+      - name: 9. Run Selenium E2E Tests (WebdriverIO)
+        run: |
+          cd web-automation
+          npm install
+          npm run generate-tests
+          npm run test:e2e || true
+          
+      - name: 10. Generate Excel Reports
+        run: |
+          cd web-automation
+          npm run report:excel
+          
+      - name: 11. Generate HTML Reports
+        run: |
+          cd web-automation
+          npm run report:html
+          
+      - name: 12. Publish GitHub Action Summary
+        run: |
+          cd web-automation
+          npm run report:summary >> $GITHUB_STEP_SUMMARY
+          
+      - name: 13. Upload All Test Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Enterprise-Web-Automation-Results
+          path: |
+            web-automation/reports/
+            web-automation/screenshots/
+            web-automation/logs/
+          retention-days: 30

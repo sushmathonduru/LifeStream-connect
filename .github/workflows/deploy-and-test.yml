@@ -38,6 +38,8 @@ jobs:
         
       - name: 5. Setup GitHub Pages deployment
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
         
       - name: 6. Upload GitHub Pages Artifact
         uses: actions/upload-pages-artifact@v3

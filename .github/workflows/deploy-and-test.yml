@@ -36,19 +36,12 @@ jobs:
       - name: 4. Build Vite Application
         run: npm run build
         
-      - name: 5. Setup GitHub Pages deployment
-        uses: actions/configure-pages@v4
+      - name: 5. Deploy to GitHub Pages (gh-pages branch)
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          enablement: true
-        
-      - name: 6. Upload GitHub Pages Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
-          
-      - name: 7. Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
         
       - name: 8. Verify Deployment (HTTP 200 Polling)
         run: |

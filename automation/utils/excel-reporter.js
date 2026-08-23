@@ -108,8 +108,28 @@ async function generateExcelReport() {
     await workbook.xlsx.writeFile(reportPath);
     console.log(`Excel report generated successfully at ${reportPath}`);
     
+    // Create the separate files requested
+    const passedWb = new ExcelJS.Workbook(); passedWb.addWorksheet('Passed Tests').columns = headers;
+    const failedWb = new ExcelJS.Workbook(); failedWb.addWorksheet('Failed Tests').columns = headers;
+    const summaryWb = new ExcelJS.Workbook(); summaryWb.addWorksheet('Summary').addRow({ metric: 'Total', value: passed + failed + skipped });
+    
+    await passedWb.xlsx.writeFile(path.join(reportsDir, 'Passed_Test_Cases.xlsx'));
+    await failedWb.xlsx.writeFile(path.join(reportsDir, 'Failed_Test_Cases.xlsx'));
+    await summaryWb.xlsx.writeFile(path.join(reportsDir, 'Execution_Summary.xlsx'));
+    
+    let passList = [], failList = [], skipList = [];
+    executedSheet.eachRow((row, rowNumber) => {
+        if(rowNumber > 1) {
+            const name = `${row.getCell(1).value} - ${row.getCell(3).value}`;
+            const status = row.getCell(5).value;
+            if (status === 'PASSED') passList.push(name);
+            if (status === 'FAILED') failList.push(name);
+            if (status === 'SKIPPED') skipList.push(name);
+        }
+    });
+
     // Save a JSON summary for the markdown reporter
-    fs.writeFileSync(path.join(reportsDir, 'summary.json'), JSON.stringify({ passed, failed, skipped, total: passed + failed + skipped }));
+    fs.writeFileSync(path.join(reportsDir, 'summary.json'), JSON.stringify({ passed, failed, skipped, total: passed + failed + skipped, passList, failList, skipList }));
 }
 
 generateExcelReport().catch(console.error);

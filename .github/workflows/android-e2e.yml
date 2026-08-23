@@ -76,11 +76,14 @@ jobs:
           cd automation
           mkdir -p reports/allure-results
           allure generate reports/allure-results --clean -o reports/allure-report || true
+          cp reports/allure-report/index.html reports/allure-report/execution-report.html
+          cp reports/allure-report/index.html reports/allure-report/dashboard.html
           
       - name: 16-17. Generate Summary & JSON
         run: |
           cd automation
           npm run report:summary >> $GITHUB_STEP_SUMMARY
+          cp reports/summary.json reports/execution-results.json
           
       - name: 18. Upload Artifacts
         uses: actions/upload-artifact@v4
@@ -90,15 +93,25 @@ jobs:
           path: |
             automation/reports/allure-report/
             automation/reports/*.xlsx
+            automation/reports/execution-results.json
             automation/logs/
             automation/screenshots/
           retention-days: 30
           
-      - name: 19-20. Publish to GitHub Pages
+      - name: 19-20. Publish to GitHub Pages (History)
         uses: peaceiris/actions-gh-pages@v3
         if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: automation/reports/allure-report
           keep_files: true
-          destination_dir: reports/${{ github.run_number }}
+          destination_dir: reports/history/build-${{ github.run_number }}
+          
+      - name: 19-20. Publish to GitHub Pages (Latest)
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: automation/reports/allure-report
+          keep_files: true
+          destination_dir: reports/latest

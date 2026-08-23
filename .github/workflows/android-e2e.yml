@@ -39,7 +39,8 @@ jobs:
           npm install
           cd Mobile
           npm install
-          npx cap sync android
+          npm run build
+          npx cap add android || npx cap sync android
           
       - name: 5. Build Debug APK
         run: |

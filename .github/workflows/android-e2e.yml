@@ -1,0 +1,98 @@
+name: Android E2E Automation Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  e2e-automation:
+    name: Build & Appium E2E
+    runs-on: macos-latest # macOS provides HAXM hardware acceleration for Android emulators out of the box
+    
+    steps:
+      - name: 1. Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: 2. Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: 3. Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          
+      - name: 4. Install Project Dependencies & Build Capacitor
+        run: |
+          npm ci
+          cd Mobile
+          npm ci
+          npx cap sync android
+          
+      - name: 5. Build Debug APK
+        run: |
+          cd Mobile/android
+          ./gradlew assembleDebug
+          
+      - name: 6. Setup Automation Framework
+        run: |
+          cd automation
+          npm ci
+          npm run generate-tests
+          
+      - name: 7-13. Emulator Boot, Install APK, Start Appium & Run Tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: default
+          arch: x86_64
+          profile: pixel_5
+          script: |
+            echo "Emulator is ready. Starting E2E Tests..."
+            cd automation
+            npm run wdio || true # Continue even if tests fail to collect reports
+            
+      - name: 14. Generate Excel Report
+        run: |
+          cd automation
+          npm run report:excel
+          
+      - name: 15. Generate HTML Report (Allure)
+        run: |
+          npm install -g allure-commandline
+          cd automation
+          allure generate reports/allure-results --clean -o reports/allure-report
+          
+      - name: 16-17. Generate Summary & JSON
+        run: |
+          cd automation
+          npm run report:summary >> $GITHUB_STEP_SUMMARY
+          
+      - name: 18. Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Automation-Reports
+          path: |
+            automation/reports/allure-report/
+            automation/reports/*.xlsx
+            automation/logs/
+            automation/screenshots/
+          retention-days: 30
+          
+      - name: 19-20. Publish to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: automation/reports/allure-report
+          keep_files: true
+          destination_dir: reports/${{ github.run_number }}

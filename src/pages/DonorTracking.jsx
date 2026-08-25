@@ -100,6 +100,8 @@ export default function DonorTracking() {
     }
   }, []);
 
+  const [geofenceAlert, setGeofenceAlert] = useState(false);
+
   useEffect(() => {
     if (donorLocation && hospitalLocation) {
       const R = 6371;
@@ -110,10 +112,19 @@ export default function DonorTracking() {
         Math.cos(hospitalLocation.lat * Math.PI / 180) *
         Math.sin(dLon / 2) * Math.sin(dLon / 2);
       const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const dist = (R * c).toFixed(1);
-      setDistance(dist);
-      const mins = Math.ceil((dist / 30) * 60);
-      setEta(mins + " minutes");
+      const distKm = R * c;
+      const distMeters = distKm * 1000;
+      const distFormatted = distKm < 1 ? Math.round(distMeters) + " m" : distKm.toFixed(1) + " km";
+      setDistance(distFormatted);
+
+      if (distMeters <= 100 || distKm <= 0.1 || (Math.abs(dLat) < 0.001 && Math.abs(dLon) < 0.001)) {
+        setGeofenceAlert(true);
+        setEta("Arriving Now (< 1 min)");
+      } else {
+        setGeofenceAlert(false);
+        const mins = Math.ceil((distKm / 30) * 60);
+        setEta(mins + " minutes");
+      }
     }
   }, [donorLocation, hospitalLocation]);
 
@@ -254,6 +265,21 @@ export default function DonorTracking() {
             </div>
           </div>
         </div>
+
+        {/* Geofence 100-Meter Proximity Alert Banner */}
+        {geofenceAlert && (
+          <div className="bg-emerald-600 bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-4 shadow-lg border border-emerald-500 flex items-center gap-3 animate-pulse">
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center text-xl shrink-0">
+              📍
+            </div>
+            <div>
+              <p className="font-extrabold text-xs uppercase tracking-wider text-emerald-100">100-Meter Geofence Alert</p>
+              <p className="font-extrabold text-sm text-white mt-0.5">
+                You have entered the 100-meter hospital proximity zone!
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">

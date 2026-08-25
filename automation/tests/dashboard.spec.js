@@ -69,6 +69,7 @@ describe('Dashboard Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_DASH_008');
     });
 
     it('TC_DASH_009 - Verify functionality in Dashboard 9', async () => {

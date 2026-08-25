@@ -33,6 +33,7 @@ describe('Session_Management Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_SESS_004');
     });
 
     it('TC_SESS_005 - Verify functionality in Session_Management 5', async () => {

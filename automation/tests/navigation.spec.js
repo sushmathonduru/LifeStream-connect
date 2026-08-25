@@ -6,6 +6,7 @@ describe('Navigation Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_NAV_001');
     });
 
     it('TC_NAV_002 - Verify functionality in Navigation 2', async () => {
@@ -123,7 +124,6 @@ describe('Navigation Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_NAV_014');
     });
 
     it('TC_NAV_015 - Verify functionality in Navigation 15', async () => {
@@ -151,6 +151,7 @@ describe('Navigation Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_NAV_017');
     });
 
     it('TC_NAV_018 - Verify functionality in Navigation 18', async () => {

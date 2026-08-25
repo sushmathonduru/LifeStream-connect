@@ -1,0 +1,68 @@
+Viewed package.json:1-38
+Viewed package.json:1-22
+Viewed config.js:1-18
+Viewed server.js:1-149
+
+Here is the complete breakdown of the **Tech Stack** used in **LifeStream Connect**, covering Frontend, Backend, Database, and how all components are connected:
+
+---
+
+### 1. **Frontend (Client Side)**
+
+* **Core Framework**: **React 19** (`react`, `react-dom`)
+* **Build System & Dev Server**: **Vite 8** (`vite`, `@vitejs/plugin-react`)
+* **Styling & Design System**: 
+  * **Tailwind CSS v4** (`@tailwindcss/vite`, `tailwindcss`)
+  * **Google Font**: *Plus Jakarta Sans*
+  * Custom Responsive Design & CSS Fallbacks (`src/index.css`)
+* **Routing**: **React Router DOM v7** (`react-router-dom`)
+* **UI Icons**: **Lucide React** (`lucide-react`)
+* **Live Maps & GPS Tracking**: **Leaflet** & **React Leaflet** (`leaflet`, `react-leaflet`) for interactive maps and route polylines.
+* **Real-time WebSockets**: **Socket.io Client** (`socket.io-client`)
+* **HTTP Client**: **Axios** (`axios`)
+* **Toast Notifications**: **React Hot Toast** (`react-hot-toast`)
+
+---
+
+### 2. **Backend (Server Side)**
+
+* **Runtime Environment**: **Node.js**
+* **Web Framework**: **Express.js** (`express`)
+* **Real-Time WebSockets**: **Socket.io** (`socket.io`) server listening on port 5000 for emergency alerts and live location streaming.
+* **Database SDK**: **Firebase Admin SDK** (`firebase-admin`)
+* **Security & Auth**: **Bcrypt.js** (`bcryptjs`) & **JSON Web Token** (`jsonwebtoken`)
+* **Utilities**: **CORS** (`cors`), **Dotenv** (`dotenv`), **Nodemon** (`nodemon`)
+
+---
+
+### 3. **Database & Cloud Infrastructure**
+
+* **Primary Database**: **Firebase Realtime Database**
+  * Data trees stored: `/users`, `/requests`, `/notifications`, `/tracking`
+  * Real-time listeners (`onValue`) update the UI instantly when data changes anywhere.
+* **Authentication**: **Firebase Authentication**
+  * Handles user sign-up, sign-in, session tokens, and password reset flows.
+
+---
+
+### 4. **How Everything Is Connected (System Architecture)**
+
+```mermaid
+graph TD
+    A[React 19 Frontend - Vite] -->|Direct Auth Sync| B[Firebase Auth]
+    A -->|Real-Time Listeners & Database Sync| C[Firebase Realtime Database]
+    A -->|REST API HTTP Calls /api| D[Node.js + Express Backend]
+    A <-->|Socket.io WebSockets| E[Socket.io Real-Time Event Server]
+    D -->|Admin Privileges| C
+```
+
+1. **Frontend to Firebase Auth & Database**:
+   - The React frontend ([src/firebase/config.js](file:///c:/Users/thond/lifestream-connect/src/firebase/config.js)) directly connects to **Firebase Auth** for user login/registration.
+   - It subscribes directly to **Firebase Realtime Database** nodes (`users`, `requests`, `notifications`, `tracking`) using `onValue` hooks, enabling instant real-time data sync without manual polling.
+
+2. **Frontend to Node.js / Express Backend**:
+   - The client sends HTTP REST API requests via Axios (`http://localhost:5000/api`) to the Express backend for server-side logic (`/api/auth`, `/api/donors`, `/api/requests`, `/api/emergency`).
+
+3. **Real-time Live Tracking & Emergency Alerts via WebSockets**:
+   - The frontend connects to the backend **Socket.io** server (`http://localhost:5000`).
+   - When an emergency occurs or a donor is en-route, Socket.io broadcasts `emergency-broadcast` and `donor-location-update` events instantly to all connected clients in real time.

@@ -35,27 +35,9 @@ function AppLayout() {
   }
 
   return (
-    <div style={{
-      display: "flex",
-      minHeight: "100vh",
-      width: "100%",
-      backgroundColor: "#f9fafb",
-    }}>
-      <div className="hidden md:block" style={{
-        width: "260px",
-        minWidth: "260px",
-        minHeight: "100vh",
-        flexShrink: 0,
-      }}>
-        <BottomNav />
-      </div>
-
-      <div style={{
-        flex: 1,
-        minHeight: "100vh",
-        overflowY: "auto",
-        overflowX: "hidden",
-      }}>
+    <div className="flex flex-col md:flex-row min-h-screen w-full bg-slate-50 text-slate-800">
+      <BottomNav />
+      <main className="flex-1 min-h-screen pb-24 md:pb-8 overflow-y-auto overflow-x-hidden">
         <Routes>
           <Route path="/dashboard" element={
             <ProtectedRoute><Dashboard /></ProtectedRoute>
@@ -88,11 +70,7 @@ function AppLayout() {
             <ProtectedRoute><Certifications /></ProtectedRoute>
           } />
         </Routes>
-      </div>
-
-      <div className="md:hidden">
-        <BottomNav />
-      </div>
+      </main>
     </div>
   )
 }

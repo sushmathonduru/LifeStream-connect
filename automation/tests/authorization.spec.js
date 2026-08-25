@@ -168,6 +168,7 @@ describe('Authorization Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_AUTHZ_019');
     });
 
     it('TC_AUTHZ_020 - Verify functionality in Authorization 20', async () => {

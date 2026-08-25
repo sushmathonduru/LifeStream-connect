@@ -6,6 +6,7 @@ describe('Authentication Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_AUTH_001');
     });
 
     it('TC_AUTH_002 - Verify functionality in Authentication 2', async () => {
@@ -123,6 +124,7 @@ describe('Authentication Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_AUTH_014');
     });
 
     it('TC_AUTH_015 - Verify functionality in Authentication 15', async () => {

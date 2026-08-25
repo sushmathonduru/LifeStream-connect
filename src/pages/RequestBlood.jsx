@@ -82,61 +82,62 @@ export default function RequestBlood() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-5xl mx-auto px-4 md:px-8 pt-8 pb-6">
-        <button
-          onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-gray-700 mb-5 font-medium hover:text-red-600 transition-colors"
-        >
-          <ArrowLeft size={18} /> Back
-        </button>
-
-        <div className="bg-gradient-to-br from-red-600 to-red-800 rounded-[28px] p-5 text-white shadow-lg shadow-red-200/50">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white/15 flex items-center justify-center border border-white/20">
-              <Droplets size={20} />
-            </div>
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Navigation & Header Card */}
+        <div className="bg-red-600 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-2xl p-6 shadow-md flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2.5 bg-white/20 hover:bg-white/30 text-white rounded-xl transition-all border border-white/30"
+              title="Go back"
+            >
+              <ArrowLeft size={18} />
+            </button>
             <div>
-              <p className="text-sm text-red-100">Request blood for patients fast</p>
-              <h1 className="text-2xl font-bold">Create Request</h1>
+              <h1 className="text-2xl font-extrabold text-white tracking-tight">Create Blood Request</h1>
+              <p className="text-red-100 text-xs font-medium mt-0.5">
+                Submit a standard blood request to find matched donors
+              </p>
             </div>
           </div>
+          <div className="w-11 h-11 bg-white/20 text-white border border-white/30 rounded-xl flex items-center justify-center text-xl shrink-0">
+            <Droplets size={22} />
+          </div>
         </div>
-      </div>
 
-      <div className="max-w-5xl mx-auto px-4 md:px-8 pb-10 space-y-5">
         {isDonor && (
-          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-4 text-blue-900 shadow-sm">
-            <p className="text-sm font-semibold">You are requesting as a patient</p>
-            <p className="text-xs mt-1 text-blue-700">Your donor status remains active</p>
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-blue-900">
+            <p className="text-xs font-extrabold">Requesting as a Patient</p>
+            <p className="text-xs text-blue-700 font-medium mt-0.5">Your active donor profile remains registered in the system.</p>
           </div>
         )}
 
         {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 rounded-2xl px-4 py-3 shadow-sm">
-            Request submitted successfully!
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-2xl p-4 text-xs font-bold text-center">
+            ✅ Blood request created successfully! Redirecting to tracking...
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-[28px] p-5 md:p-6 shadow-sm border border-gray-100 space-y-5">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Patient Name</label>
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-slate-200/80 p-6 sm:p-8 shadow-xs space-y-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Patient Name *</label>
               <input
                 type="text"
                 value={patientName}
                 onChange={(e) => setPatientName(e.target.value)}
-                placeholder="Enter patient name"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-sm bg-white focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-100 transition"
+                placeholder="Enter full patient name"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 bg-slate-50/50 focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Blood Group</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Blood Group *</label>
               <select
                 value={bloodGroup}
                 onChange={(e) => setBloodGroup(e.target.value)}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-sm bg-white focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-100 transition"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 bg-slate-50/50 focus:outline-none focus:border-red-500"
               >
                 <option value="">Select blood group</option>
                 {bloodGroups.map(function (group) {
@@ -150,70 +151,71 @@ export default function RequestBlood() {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Units</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Units Required *</label>
               <input
                 type="number"
                 value={units}
                 onChange={(e) => setUnits(e.target.value)}
                 min="1"
                 max="10"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-sm bg-white focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-100 transition"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 bg-slate-50/50 focus:outline-none focus:border-red-500"
               />
             </div>
 
-            <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Hospital</label>
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Hospital Name *</label>
               <input
                 type="text"
                 value={hospital}
                 onChange={(e) => setHospital(e.target.value)}
-                placeholder="Hospital name"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-sm bg-white focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-100 transition"
+                placeholder="e.g. St. Jude Memorial Hospital"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 bg-slate-50/50 focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">City</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">City *</label>
               <input
                 type="text"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
-                placeholder="City"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-sm bg-white focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-100 transition"
+                placeholder="City name"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 bg-slate-50/50 focus:outline-none focus:border-red-500"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Contact Number</label>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Contact Phone *</label>
               <input
                 type="tel"
                 value={contact}
                 onChange={(e) => setContact(e.target.value)}
                 placeholder="Phone number"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-sm bg-white focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-100 transition"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 bg-slate-50/50 focus:outline-none focus:border-red-500"
               />
             </div>
 
-            <div className="md:col-span-2">
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Notes</label>
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-bold text-slate-700 mb-1.5 uppercase tracking-wider">Additional Notes</label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                rows="4"
-                placeholder="Additional details"
-                className="w-full border border-gray-200 rounded-xl px-4 py-3.5 text-sm bg-white focus:outline-none focus:border-red-400 focus:ring-4 focus:ring-red-100 transition resize-none"
+                rows="3"
+                placeholder="Specify doctor instructions, room/ward number, or urgent timing..."
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 bg-slate-50/50 focus:outline-none focus:border-red-500 resize-none"
               />
             </div>
           </div>
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3.5 rounded-xl shadow-lg shadow-red-200/60 flex items-center justify-center gap-2 transition hover:brightness-105"
+            disabled={loading}
+            className="w-full bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white font-extrabold py-4 rounded-xl shadow-xs flex items-center justify-center gap-2 transition-all text-xs uppercase tracking-wider mt-2"
           >
             {loading ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
             ) : (
-              "Broadcast Request"
+              "Submit Blood Request"
             )}
           </button>
         </form>

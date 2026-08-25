@@ -96,7 +96,6 @@ describe('Regression_Suite Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_REGRESS_011');
     });
 
     it('TC_REGRESS_012 - Verify functionality in Regression_Suite 12', async () => {
@@ -232,7 +231,6 @@ describe('Regression_Suite Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_REGRESS_026');
     });
 
     it('TC_REGRESS_027 - Verify functionality in Regression_Suite 27', async () => {
@@ -350,7 +348,6 @@ describe('Regression_Suite Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_REGRESS_039');
     });
 
     it('TC_REGRESS_040 - Verify functionality in Regression_Suite 40', async () => {
@@ -423,6 +420,7 @@ describe('Regression_Suite Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_REGRESS_047');
     });
 
     it('TC_REGRESS_048 - Verify functionality in Regression_Suite 48', async () => {

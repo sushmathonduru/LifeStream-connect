@@ -6,7 +6,6 @@ describe('CRUD_Operations Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_CRUD_001');
     });
 
     it('TC_CRUD_002 - Verify functionality in CRUD_Operations 2', async () => {
@@ -61,7 +60,6 @@ describe('CRUD_Operations Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_CRUD_007');
     });
 
     it('TC_CRUD_008 - Verify functionality in CRUD_Operations 8', async () => {
@@ -125,7 +123,6 @@ describe('CRUD_Operations Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_CRUD_014');
     });
 
     it('TC_CRUD_015 - Verify functionality in CRUD_Operations 15', async () => {
@@ -180,7 +177,6 @@ describe('CRUD_Operations Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_CRUD_020');
     });
 
     it('TC_CRUD_021 - Verify functionality in CRUD_Operations 21', async () => {
@@ -262,7 +258,6 @@ describe('CRUD_Operations Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_CRUD_029');
     });
 
     it('TC_CRUD_030 - Verify functionality in CRUD_Operations 30', async () => {
@@ -317,7 +312,6 @@ describe('CRUD_Operations Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_CRUD_035');
     });
 
     it('TC_CRUD_036 - Verify functionality in CRUD_Operations 36', async () => {
@@ -354,7 +348,6 @@ describe('CRUD_Operations Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_CRUD_039');
     });
 
     it('TC_CRUD_040 - Verify functionality in CRUD_Operations 40', async () => {

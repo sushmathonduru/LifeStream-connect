@@ -1,30 +1,40 @@
-﻿import { useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { Droplets, HeartHandshake, ShieldAlert } from "lucide-react";
 
 export default function SplashScreen() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => navigate("/login"), 3000);
+    const timer = setTimeout(() => navigate("/login"), 2500);
     return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-red-600 to-red-800">
-      <div className="animate-pulse mb-6">
-        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl">
-          <svg viewBox="0 0 64 64" className="w-14 h-14" fill="none">
-            <path d="M32 56C32 56 8 40 8 24C8 15 14 8 23 8C27 8 31 10 32 12C33 10 37 8 41 8C50 8 56 15 56 24C56 40 32 56 32 56Z" fill="#E53935" />
-            <path d="M32 20 L32 44 M20 32 L44 32" stroke="white" strokeWidth="3" strokeLinecap="round" />
-          </svg>
+    <div className="min-h-screen bg-slate-900 flex flex-col items-center justify-center p-6 text-white relative overflow-hidden select-none">
+      <div className="absolute w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="relative z-10 text-center max-w-sm mx-auto space-y-6">
+        <div className="w-20 h-20 bg-red-600 rounded-3xl flex items-center justify-center shadow-xl mx-auto animate-pulse">
+          <Droplets size={40} className="text-white" />
         </div>
-      </div>
-      <h1 className="text-3xl font-bold text-white mb-2">Lifestream Connect</h1>
-      <p className="text-red-200 text-sm text-center px-8">A Smart Blood Donation & Emergency Donor Tracking System</p>
-      <div className="mt-12 flex gap-2">
-        <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
-        <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
-        <div className="w-2 h-2 bg-white rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+
+        <div>
+          <h1 className="text-3xl font-black tracking-tight text-white">LifeStream</h1>
+          <p className="text-xs font-bold text-red-500 uppercase tracking-widest mt-1">
+            Emergency Blood Network
+          </p>
+        </div>
+
+        <p className="text-xs text-slate-400 font-medium leading-relaxed">
+          Connecting critical patients with verified local blood donors in real-time.
+        </p>
+
+        <div className="pt-8 flex items-center justify-center gap-2">
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: "0ms" }} />
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: "150ms" }} />
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-bounce" style={{ animationDelay: "300ms" }} />
+        </div>
       </div>
     </div>
   );

@@ -69,6 +69,7 @@ describe('Offline_Handling Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_OFF_008');
     });
 
     it('TC_OFF_009 - Verify functionality in Offline_Handling 9', async () => {

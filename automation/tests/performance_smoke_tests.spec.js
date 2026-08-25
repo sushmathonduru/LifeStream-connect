@@ -15,7 +15,6 @@ describe('Performance_Smoke_Tests Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_PERF_002');
     });
 
     it('TC_PERF_003 - Verify functionality in Performance_Smoke_Tests 3', async () => {
@@ -70,7 +69,6 @@ describe('Performance_Smoke_Tests Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_PERF_008');
     });
 
     it('TC_PERF_009 - Verify functionality in Performance_Smoke_Tests 9', async () => {

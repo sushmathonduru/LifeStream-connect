@@ -102,57 +102,60 @@ export default function EmergencyRequest() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-6">
-        <div className="max-w-5xl mx-auto flex items-center gap-3">
-          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center animate-pulse">
-            <AlertCircle className="text-red-600" size={22} />
-          </div>
-          <div>
-            <h1 className="text-white text-xl font-bold">Emergency Request</h1>
-            <p className="text-red-200 text-xs">
-              {donorCount} available donors nearby
-            </p>
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header Title Card */}
+        <div className="bg-red-600 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-2xl p-6 shadow-md flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 bg-white/20 backdrop-blur-xs text-white border border-white/30 rounded-xl flex items-center justify-center text-2xl shrink-0 animate-pulse">
+              <AlertCircle size={24} />
+            </div>
+            <div>
+              <h1 className="text-2xl font-extrabold text-white tracking-tight">Emergency Blood Request</h1>
+              <p className="text-red-100 text-xs font-medium mt-0.5">
+                Broadcast an instant urgent request to {donorCount} registered available donors
+              </p>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="max-w-5xl mx-auto px-4 md:px-8 py-6 space-y-4">
         {sent && (
-          <div className="bg-green-50 border border-green-200 rounded-2xl p-4 flex items-center gap-3">
-            <CheckCircle className="text-green-500 flex-shrink-0" size={22} />
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-center gap-3">
+            <CheckCircle className="text-emerald-600 shrink-0" size={22} />
             <div>
-              <p className="text-green-700 font-semibold text-sm">
-                Emergency Broadcasted!
+              <p className="text-emerald-800 font-extrabold text-sm">
+                Emergency Alert Broadcasted!
               </p>
-              <p className="text-green-600 text-xs">
-                {donorCount} donor(s) have been notified instantly.
+              <p className="text-emerald-700 text-xs font-medium mt-0.5">
+                {donorCount} donor(s) have been notified instantly via alert notifications.
               </p>
             </div>
           </div>
         )}
 
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
-            <p className="text-red-600 text-sm">{error}</p>
+          <div className="bg-rose-50 border border-rose-200 rounded-2xl p-4">
+            <p className="text-rose-700 text-xs font-bold">{error}</p>
           </div>
         )}
 
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-sm font-semibold text-gray-700 mb-3">
-            Select Blood Group *
-          </p>
-          <div className="grid grid-cols-4 gap-2">
+        {/* Blood Group Selection */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-3">
+          <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider block">
+            Select Required Blood Group *
+          </label>
+          <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
             {bloodGroups.map(function (group) {
+              const active = selectedGroup === group
               return (
                 <button
                   key={group}
                   onClick={() => setSelectedGroup(group)}
                   className={
-                    "py-2.5 rounded-xl text-sm font-bold border-2 transition-all " +
-                    (selectedGroup === group
-                      ? "bg-red-600 text-white border-red-600 shadow-md"
-                      : "bg-gray-50 text-gray-700 border-gray-200")
+                    "py-3 rounded-xl text-sm font-black border transition-all " +
+                    (active
+                      ? "bg-red-600 text-white border-red-600 shadow-xs scale-[1.02]"
+                      : "bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100")
                   }
                 >
                   {group}
@@ -162,21 +165,23 @@ export default function EmergencyRequest() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-4 shadow-sm">
-          <p className="text-sm font-semibold text-gray-700 mb-3">
-            Urgency Level
-          </p>
-          <div className="flex gap-2">
+        {/* Urgency Selection */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-3">
+          <label className="text-xs font-extrabold text-slate-700 uppercase tracking-wider block">
+            Urgency Level *
+          </label>
+          <div className="grid grid-cols-3 gap-3">
             {urgencyLevels.map(function (item) {
+              const active = urgency === item.label
               return (
                 <button
                   key={item.label}
                   onClick={() => setUrgency(item.label)}
                   className={
-                    "flex-1 py-2 rounded-xl text-sm font-semibold border-2 transition-all " +
-                    (urgency === item.label
-                      ? item.style
-                      : "bg-gray-50 text-gray-500 border-gray-200")
+                    "py-3 rounded-xl text-xs font-bold border transition-all " +
+                    (active
+                      ? item.style + " shadow-xs"
+                      : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100")
                   }
                 >
                   {item.label}
@@ -186,33 +191,39 @@ export default function EmergencyRequest() {
           </div>
         </div>
 
-        <div className="bg-white rounded-2xl p-4 shadow-sm space-y-3">
-          <div>
-            <label className="text-xs font-semibold text-gray-600 mb-1 block">
-              Hospital Name *
-            </label>
-            <input
-              type="text"
-              value={hospital}
-              onChange={(e) => setHospital(e.target.value)}
-              placeholder="e.g. Apollo Hospital"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 bg-gray-50"
-            />
+        {/* Location & Hospital Details */}
+        <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+          <h3 className="text-xs font-extrabold text-slate-700 uppercase tracking-wider">Hospital & Request Details</h3>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-xs font-bold text-slate-700 mb-1.5 block">
+                Hospital Name *
+              </label>
+              <input
+                type="text"
+                value={hospital}
+                onChange={(e) => setHospital(e.target.value)}
+                placeholder="e.g. City General Hospital"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:border-red-500 bg-slate-50/50"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold text-slate-700 mb-1.5 block">
+                City *
+              </label>
+              <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="e.g. New York"
+                className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:border-red-500 bg-slate-50/50"
+              />
+            </div>
           </div>
+
           <div>
-            <label className="text-xs font-semibold text-gray-600 mb-1 block">
-              City *
-            </label>
-            <input
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="e.g. Chennai"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 bg-gray-50"
-            />
-          </div>
-          <div>
-            <label className="text-xs font-semibold text-gray-600 mb-1 block">
+            <label className="text-xs font-bold text-slate-700 mb-1.5 block">
               Units Required
             </label>
             <input
@@ -221,35 +232,30 @@ export default function EmergencyRequest() {
               onChange={(e) => setUnits(e.target.value)}
               min="1"
               max="10"
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400 bg-gray-50"
+              className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:border-red-500 bg-slate-50/50"
             />
           </div>
         </div>
 
+        {/* Submit Broadcast Button */}
         <button
           onClick={handleBroadcast}
-          className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-bold py-4 rounded-2xl shadow-lg hover:from-red-700 hover:to-red-800 transition-all flex items-center justify-center gap-2 text-base"
+          disabled={loading}
+          className="w-full bg-red-600 bg-gradient-to-r from-red-600 to-rose-700 hover:from-red-700 hover:to-rose-800 text-white font-extrabold py-4 rounded-2xl shadow-xs transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-xs uppercase tracking-wider"
         >
           {loading ? (
             <>
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Notifying donors...
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              <span>Notifying Nearby Donors...</span>
             </>
           ) : (
             <>
-              <AlertCircle size={20} />
-              BROADCAST EMERGENCY
+              <AlertCircle size={18} />
+              <span>Broadcast Emergency Alert</span>
             </>
           )}
         </button>
-
-        <div className="bg-gray-50 rounded-xl p-3 border border-gray-100">
-          <p className="text-xs text-gray-400 text-center">
-            Emergency alert will be sent to all available donors instantly
-          </p>
-        </div>
       </div>
-
     </div>
   )
 }

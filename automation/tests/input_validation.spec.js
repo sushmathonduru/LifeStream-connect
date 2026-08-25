@@ -105,6 +105,7 @@ describe('Input_Validation Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_VAL_012');
     });
 
     it('TC_VAL_013 - Verify functionality in Input_Validation 13', async () => {
@@ -123,6 +124,7 @@ describe('Input_Validation Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_VAL_014');
     });
 
     it('TC_VAL_015 - Verify functionality in Input_Validation 15', async () => {
@@ -285,6 +287,7 @@ describe('Input_Validation Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_VAL_032');
     });
 
     it('TC_VAL_033 - Verify functionality in Input_Validation 33', async () => {

@@ -108,107 +108,111 @@ export default function Notifications() {
   }).length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
       {toast && (
         <div className={
-          "fixed top-4 left-4 right-4 z-50 rounded-2xl p-4 " +
-          "shadow-xl flex items-start gap-3 animate-bounce " +
+          "fixed top-4 right-4 z-50 rounded-2xl p-4 shadow-xl border flex items-start gap-3 max-w-sm transition-all " +
           (toast.type === "alert"
-            ? "bg-red-600 text-white"
-            : "bg-green-600 text-white")
+            ? "bg-rose-600 text-white border-rose-700"
+            : "bg-emerald-600 text-white border-emerald-700")
         }>
-          <span className="text-2xl flex-shrink-0">
+          <span className="text-xl shrink-0">
             {toast.type === "alert" ? "🚨" : "✅"}
           </span>
-          <div className="flex-1">
-            <p className="font-bold text-sm">{toast.title}</p>
-            <p className="text-xs opacity-90 mt-0.5">{toast.message}</p>
+          <div className="flex-1 min-w-0">
+            <p className="font-extrabold text-xs">{toast.title}</p>
+            <p className="text-[11px] opacity-90 mt-0.5">{toast.message}</p>
           </div>
           <button
             onClick={() => setToast(null)}
-            className="text-white opacity-70 text-lg"
+            className="text-white/80 hover:text-white text-sm"
           >
             ✕
           </button>
         </div>
       )}
 
-      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-6">
-        <div className="max-w-5xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 bg-white rounded-full flex items-center justify-center">
-              <Bell className="text-red-600" size={22} />
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header Title Card */}
+        <div className="bg-red-600 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-2xl p-6 shadow-md flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="relative w-12 h-12 bg-white/20 backdrop-blur-xs text-white border border-white/30 rounded-xl flex items-center justify-center text-2xl shrink-0">
+              <Bell size={22} />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-red-500 rounded-full text-white text-[10px] flex items-center justify-center font-bold">
+                <span className="absolute -top-1 -right-1 min-w-4 h-4 px-1 bg-white text-red-600 rounded-full text-[10px] flex items-center justify-center font-black shadow-xs">
                   {unreadCount > 9 ? "9+" : unreadCount}
                 </span>
               )}
             </div>
             <div>
-              <h1 className="text-white text-xl font-bold">Notifications</h1>
-              {unreadCount > 0 && (
-                <p className="text-red-200 text-xs">{unreadCount} unread</p>
-              )}
+              <h1 className="text-2xl font-extrabold text-white tracking-tight">Alerts & Notifications</h1>
+              <p className="text-red-100 text-xs font-medium mt-0.5">
+                {unreadCount > 0 ? `${unreadCount} unread emergency alerts & donor notifications` : "Stay updated on blood requests and donor responses"}
+              </p>
             </div>
           </div>
+
           {unreadCount > 0 && (
             <button
               onClick={markAllAsRead}
-              className="flex items-center gap-1 bg-white bg-opacity-20 text-white text-xs px-3 py-1.5 rounded-full"
+              className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition-all border border-white/30 shrink-0"
             >
               <CheckCheck size={14} />
-              Mark all read
+              <span className="hidden sm:inline">Mark all read</span>
             </button>
           )}
         </div>
-      </div>
 
-      <div className="max-w-5xl mx-auto px-4 md:px-8 py-4 space-y-3">
-        {loading && (
-          <div className="flex justify-center py-8">
-            <div className="w-8 h-8 border-4 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        )}
+        {/* Notifications List */}
+        <div className="space-y-3">
+          {loading && (
+            <div className="flex justify-center py-12">
+              <div className="w-8 h-8 border-4 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+          )}
 
-        {!loading && notifications.length === 0 && (
-          <div className="text-center py-16">
-            <Bell className="mx-auto text-gray-300 mb-3" size={48} />
-            <p className="text-gray-500 font-medium">No notifications yet</p>
-            <p className="text-gray-400 text-sm mt-1">
-              You will see donor updates and alerts here
-            </p>
-          </div>
-        )}
+          {!loading && notifications.length === 0 && (
+            <div className="bg-white rounded-2xl border border-slate-200/80 p-12 text-center">
+              <Bell className="mx-auto text-slate-300 mb-3" size={48} />
+              <p className="text-slate-800 font-bold text-base">No Notifications Yet</p>
+              <p className="text-slate-400 text-xs mt-1">
+                Emergency alerts and donor response updates will appear here.
+              </p>
+            </div>
+          )}
 
-        {!loading &&
-          notifications.map(function (notif) {
-            return (
-              <div
-                key={notif.id}
-                onClick={() => markAsRead(notif.id)}
-                className={
-                  "rounded-2xl p-4 cursor-pointer transition-all " +
-                  getBorderColor(notif.type) +
-                  (!notif.read ? " shadow-sm" : " opacity-70")
-                }
-              >
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-0.5">
+          {!loading &&
+            notifications.map(function (notif) {
+              const isAlert = notif.type === "alert"
+              const isSuccess = notif.type === "success"
+              return (
+                <div
+                  key={notif.id}
+                  onClick={() => markAsRead(notif.id)}
+                  className={
+                    "bg-white rounded-2xl p-4 border transition-all cursor-pointer shadow-xs flex items-start gap-4 hover:border-slate-300 " +
+                    (isAlert
+                      ? "border-l-4 border-l-rose-500 border-slate-200/80"
+                      : isSuccess
+                        ? "border-l-4 border-l-emerald-500 border-slate-200/80"
+                        : "border-l-4 border-l-blue-500 border-slate-200/80") +
+                    (!notif.read ? " bg-slate-50/50 font-semibold" : " opacity-75")
+                  }
+                >
+                  <div className="shrink-0 mt-0.5">
                     {getIcon(notif.type)}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
-                      <p className={
-                        "text-sm " + (!notif.read ? "font-semibold text-gray-800" : "font-medium text-gray-600")
-                      }>
+                    <div className="flex items-center justify-between gap-2">
+                      <h4 className={`text-sm tracking-tight ${!notif.read ? "font-bold text-slate-900" : "font-semibold text-slate-700"}`}>
                         {notif.title}
-                      </p>
+                      </h4>
                       {!notif.read && (
-                        <div className="w-2 h-2 bg-red-500 rounded-full flex-shrink-0 mt-1.5"></div>
+                        <span className="w-2 h-2 bg-red-500 rounded-full shrink-0" />
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5">{notif.message}</p>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-slate-600 font-medium mt-1 leading-relaxed">{notif.message}</p>
+                    <p className="text-[11px] text-slate-400 font-semibold mt-2">
                       {formatTime(notif.createdAt)}
                     </p>
                   </div>
@@ -217,16 +221,16 @@ export default function Notifications() {
                       e.stopPropagation()
                       deleteNotif(notif.id)
                     }}
-                    className="text-gray-300 hover:text-gray-500 text-xs flex-shrink-0"
+                    className="text-slate-300 hover:text-slate-500 text-xs shrink-0 p-1"
+                    title="Delete notification"
                   >
                     ✕
                   </button>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+        </div>
       </div>
-
     </div>
   )
 }

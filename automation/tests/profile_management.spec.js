@@ -105,7 +105,6 @@ describe('Profile_Management Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_PROFILE_012');
     });
 
     it('TC_PROFILE_013 - Verify functionality in Profile_Management 13', async () => {
@@ -115,6 +114,7 @@ describe('Profile_Management Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_PROFILE_013');
     });
 
     it('TC_PROFILE_014 - Verify functionality in Profile_Management 14', async () => {

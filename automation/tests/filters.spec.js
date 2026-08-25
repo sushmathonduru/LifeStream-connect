@@ -114,6 +114,7 @@ describe('Filters Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_FILT_013');
     });
 
     it('TC_FILT_014 - Verify functionality in Filters 14', async () => {

@@ -42,6 +42,7 @@ describe('Accessibility Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_A11Y_005');
     });
 
     it('TC_A11Y_006 - Verify functionality in Accessibility 6', async () => {
@@ -60,6 +61,7 @@ describe('Accessibility Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_A11Y_007');
     });
 
     it('TC_A11Y_008 - Verify functionality in Accessibility 8', async () => {
@@ -114,7 +116,6 @@ describe('Accessibility Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_A11Y_013');
     });
 
     it('TC_A11Y_014 - Verify functionality in Accessibility 14', async () => {

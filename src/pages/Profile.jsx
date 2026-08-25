@@ -108,146 +108,159 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-gradient-to-br from-red-600 to-red-800 px-4 md:px-8 pt-12 pb-8">
-        <div className="max-w-4xl mx-auto flex flex-col items-center">
-          <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-lg mb-3">
-            <span className="text-red-600 font-bold text-2xl">{getInitials()}</span>
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Profile Avatar & Rank Header */}
+        <div className="bg-red-600 bg-gradient-to-r from-red-600 to-rose-700 text-white rounded-2xl p-6 sm:p-8 shadow-md flex flex-col sm:flex-row items-center gap-6 text-center sm:text-left">
+          <div className="w-20 h-20 bg-white text-red-600 font-black text-3xl rounded-2xl flex items-center justify-center shadow-md shrink-0 border-2 border-white/40">
+            {getInitials()}
           </div>
-          <h2 className="text-white font-bold text-xl">
-            {userProfile ? userProfile.name : currentUser.email.split("@")[0]}
-          </h2>
-          {userProfile && userProfile.bloodGroup && (
-            <span className="bg-white text-red-600 text-xs font-bold px-3 py-1 rounded-full mt-2">
-              {userProfile.bloodGroup}
-            </span>
-          )}
-          {userProfile && userProfile.city && (
-            <p className="text-red-200 text-xs mt-1">{userProfile.city}</p>
-          )}
-          <div className="flex gap-2 mt-2">
+          <div className="flex-1 min-w-0">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              <h2 className="text-2xl font-extrabold text-white tracking-tight">
+                {userProfile ? userProfile.name : currentUser.email.split("@")[0]}
+              </h2>
+              {userProfile && userProfile.bloodGroup && (
+                <span className="bg-white/20 backdrop-blur-xs border border-white/30 text-white text-xs font-black px-3 py-1 rounded-full">
+                  Group {userProfile.bloodGroup}
+                </span>
+              )}
+            </div>
+            <p className="text-xs text-red-100 font-medium mt-1">
+              {currentUser.email} • {userProfile && userProfile.city ? userProfile.city : "Location not set"}
+            </p>
             {userProfile && userProfile.isDonor && (
-              <span className="bg-green-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
-                Active Donor
+              <span className="inline-block bg-white/20 backdrop-blur-xs border border-white/30 text-white text-[11px] font-bold px-3 py-0.5 rounded-full mt-2">
+                ✓ Active Donor Status Registered
               </span>
             )}
           </div>
         </div>
-      </div>
 
-      <div className="max-w-4xl mx-auto px-4 md:px-8 py-4 space-y-4">
         {success && (
-          <div className="bg-green-50 border border-green-200 rounded-2xl p-3">
-            <p className="text-green-700 text-sm text-center font-medium">{success}</p>
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center">
+            <p className="text-emerald-800 text-xs font-bold">{success}</p>
           </div>
         )}
 
+        {/* Edit Form / Information Card */}
         {isEditing ? (
-          <div className="bg-white rounded-2xl shadow-sm p-4 space-y-3">
-            <div className="flex items-center justify-between mb-2">
-              <p className="font-semibold text-gray-800">Edit Profile</p>
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="font-extrabold text-slate-900 text-sm">Edit Account Profile</h3>
               <button
                 onClick={() => setIsEditing(false)}
-                className="text-gray-400"
+                className="text-slate-400 hover:text-slate-600 p-1"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
-            <div>
-              <label className="text-xs text-gray-500 mb-1 block">Full Name</label>
-              <input
-                value={editForm.name}
-                onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400"
-              />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-bold text-slate-700 mb-1.5 block">Full Name</label>
+                <input
+                  value={editForm.name}
+                  onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:border-red-500 bg-slate-50/50"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 mb-1.5 block">Phone Number</label>
+                <input
+                  value={editForm.phone}
+                  onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:border-red-500 bg-slate-50/50"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 mb-1.5 block">City</label>
+                <input
+                  value={editForm.city}
+                  onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:border-red-500 bg-slate-50/50"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-700 mb-1.5 block">Blood Group</label>
+                <select
+                  value={editForm.bloodGroup}
+                  onChange={(e) => setEditForm({ ...editForm, bloodGroup: e.target.value })}
+                  className="w-full border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:border-red-500 bg-slate-50/50"
+                >
+                  <option value="">Select Blood Group</option>
+                  {bloodGroups.map((g) => (
+                    <option key={g} value={g}>{g}</option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div>
-              <label className="text-xs text-gray-500 mb-1 block">Phone</label>
-              <input
-                value={editForm.phone}
-                onChange={(e) => setEditForm({ ...editForm, phone: e.target.value })}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 mb-1 block">City</label>
-              <input
-                value={editForm.city}
-                onChange={(e) => setEditForm({ ...editForm, city: e.target.value })}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400"
-              />
-            </div>
-            <div>
-              <label className="text-xs text-gray-500 mb-1 block">Blood Group</label>
-              <select
-                value={editForm.bloodGroup}
-                onChange={(e) => setEditForm({ ...editForm, bloodGroup: e.target.value })}
-                className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-red-400"
-              >
-                <option value="">Select Blood Group</option>
-                {bloodGroups.map((g) => (
-                  <option key={g} value={g}>{g}</option>
-                ))}
-              </select>
-            </div>
+
             <button
               onClick={handleSaveProfile}
-
-              className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2"
+              disabled={saving}
+              className="w-full bg-red-600 hover:bg-red-700 text-white font-extrabold py-3.5 rounded-xl shadow-xs transition-all active:scale-[0.98] flex items-center justify-center gap-2 text-xs uppercase tracking-wider mt-2"
             >
               {saving ? (
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <>
-                  <Check size={18} />
-                  Save Changes
+                  <Check size={16} />
+                  <span>Save Profile Details</span>
                 </>
               )}
             </button>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl shadow-sm p-4">
-            <div className="flex items-center justify-between mb-3">
-              <p className="font-semibold text-gray-800 text-sm">My Information</p>
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 className="font-extrabold text-slate-900 text-sm">Account Information</h3>
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-1 text-red-600 text-xs font-medium"
+                className="flex items-center gap-1.5 text-red-600 hover:text-red-700 text-xs font-bold bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-all"
               >
                 <Edit size={14} />
-                Edit
+                <span>Edit Profile</span>
               </button>
             </div>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <Mail className="text-gray-400 flex-shrink-0" size={16} />
-                <div>
-                  <p className="text-xs text-gray-400">Email</p>
-                  <p className="text-sm text-gray-700">{currentUser.email}</p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex items-center gap-3 p-3 bg-slate-50/80 rounded-xl border border-slate-200/60">
+                <Mail className="text-slate-400 shrink-0" size={18} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">Email Address</p>
+                  <p className="text-xs font-bold text-slate-800 truncate mt-0.5">{currentUser.email}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Phone className="text-gray-400 flex-shrink-0" size={16} />
-                <div>
-                  <p className="text-xs text-gray-400">Phone</p>
-                  <p className="text-sm text-gray-700">
+
+              <div className="flex items-center gap-3 p-3 bg-slate-50/80 rounded-xl border border-slate-200/60">
+                <Phone className="text-slate-400 shrink-0" size={18} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">Phone Number</p>
+                  <p className="text-xs font-bold text-slate-800 truncate mt-0.5">
                     {userProfile && userProfile.phone ? userProfile.phone : "Not set"}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Droplets className="text-gray-400 flex-shrink-0" size={16} />
-                <div>
-                  <p className="text-xs text-gray-400">Blood Group</p>
-                  <p className="text-sm text-gray-700">
+
+              <div className="flex items-center gap-3 p-3 bg-slate-50/80 rounded-xl border border-slate-200/60">
+                <Droplets className="text-slate-400 shrink-0" size={18} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">Blood Group</p>
+                  <p className="text-xs font-bold text-slate-800 truncate mt-0.5">
                     {userProfile && userProfile.bloodGroup ? userProfile.bloodGroup : "Not set"}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <MapPin className="text-gray-400 flex-shrink-0" size={16} />
-                <div>
-                  <p className="text-xs text-gray-400">City</p>
-                  <p className="text-sm text-gray-700">
+
+              <div className="flex items-center gap-3 p-3 bg-slate-50/80 rounded-xl border border-slate-200/60">
+                <MapPin className="text-slate-400 shrink-0" size={18} />
+                <div className="min-w-0 flex-1">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">City / Location</p>
+                  <p className="text-xs font-bold text-slate-800 truncate mt-0.5">
                     {userProfile && userProfile.city ? userProfile.city : "Not set"}
                   </p>
                 </div>
@@ -256,59 +269,74 @@ export default function Profile() {
           </div>
         )}
 
+        {/* Donor Availability Toggle */}
         {userProfile && userProfile.isDonor && (
-          <div className="bg-white rounded-2xl shadow-sm p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-semibold text-gray-800 text-sm">Available to Donate</p>
-                <p className="text-xs text-gray-400 mt-0.5">
-                  {available ? "You appear in donor search" : "You are hidden from search"}
-                </p>
-              </div>
-              <button
-                onClick={toggleAvailable}
-                className={
-                  "w-12 h-6 rounded-full transition-colors relative " +
-                  (available ? "bg-red-500" : "bg-gray-300")
-                }
-              >
-                <span
-                  className={
-                    "absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform " +
-                    (available ? "translate-x-7" : "translate-x-1")
-                  }
-                ></span>
-              </button>
+          <div className="bg-white rounded-2xl border border-slate-200/80 p-6 shadow-xs flex items-center justify-between gap-4">
+            <div>
+              <p className="font-extrabold text-slate-900 text-sm">Donor Availability Status</p>
+              <p className="text-xs text-slate-500 font-medium mt-0.5">
+                {available ? "You are currently visible to patients in emergency donor search" : "Your donor profile is currently hidden from search"}
+              </p>
             </div>
-          </div>
-        )}
-
-        {userProfile && !userProfile.isDonor && (
-          <div className="bg-red-50 rounded-2xl p-4 border border-red-100">
-            <p className="font-semibold text-gray-800 text-sm mb-1">
-              Become a Donor
-            </p>
-            <p className="text-xs text-gray-500 mb-3">
-              Register as a donor to help save lives. You can still request blood anytime.
-            </p>
             <button
-              onClick={becomeDonor}
-              className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white font-semibold py-2.5 rounded-xl text-sm"
+              type="button"
+              onClick={toggleAvailable}
+              style={{
+                width: '56px',
+                height: '28px',
+                borderRadius: '9999px',
+                padding: '3px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: available ? 'flex-end' : 'flex-start',
+                backgroundColor: available ? '#10b981' : '#cbd5e1',
+                transition: 'all 0.2s ease-in-out',
+                border: 'none',
+                outline: 'none',
+                cursor: 'pointer',
+                flexShrink: 0
+              }}
+              title={available ? "Click to set unavailable" : "Click to set available"}
             >
-              Register as Donor
+              <span
+                style={{
+                  width: '22px',
+                  height: '22px',
+                  borderRadius: '9999px',
+                  backgroundColor: '#ffffff',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
+                  display: 'block',
+                  transition: 'all 0.2s ease-in-out'
+                }}
+              />
             </button>
           </div>
         )}
 
+        {userProfile && !userProfile.isDonor && (
+          <div className="bg-red-50 rounded-2xl p-6 border border-red-200/80 text-center space-y-3">
+            <h4 className="font-black text-slate-900 text-base">Register as a Blood Donor</h4>
+            <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+              Help save lives in emergency situations. You can toggle your availability anytime.
+            </p>
+            <button
+              onClick={becomeDonor}
+              className="bg-red-600 hover:bg-red-700 active:scale-[0.98] text-white font-extrabold px-6 py-3 rounded-xl text-xs uppercase tracking-wider shadow-xs transition-all"
+            >
+              Become an Active Donor
+            </button>
+          </div>
+        )}
+
+        {/* Logout Button */}
         <button
           onClick={handleLogout}
-          className="w-full bg-red-50 text-red-600 border border-red-200 rounded-xl py-3 font-semibold flex items-center justify-center gap-2"
+          className="w-full bg-slate-100 hover:bg-rose-50 text-slate-700 hover:text-rose-600 border border-slate-200/80 hover:border-rose-200 rounded-2xl py-3.5 font-bold text-xs flex items-center justify-center gap-2 transition-all"
         >
-          <LogOut size={18} />
-          Logout
+          <LogOut size={16} />
+          <span>Log Out of LifeStream</span>
         </button>
       </div>
-
     </div>
   )
 }

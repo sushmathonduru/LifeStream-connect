@@ -60,6 +60,7 @@ describe('Notifications Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_NOTIF_007');
     });
 
     it('TC_NOTIF_008 - Verify functionality in Notifications 8', async () => {
@@ -69,6 +70,7 @@ describe('Notifications Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_NOTIF_008');
     });
 
     it('TC_NOTIF_009 - Verify functionality in Notifications 9', async () => {

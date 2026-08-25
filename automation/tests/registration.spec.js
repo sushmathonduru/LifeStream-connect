@@ -123,7 +123,6 @@ describe('Registration Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_REG_014');
     });
 
     it('TC_REG_015 - Verify functionality in Registration 15', async () => {

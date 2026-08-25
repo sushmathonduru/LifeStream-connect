@@ -1,0 +1,9 @@
+{
+  "totalScenarios": 420,
+  "virtualUsers": 100,
+  "duration": "1 minute",
+  "totalRequestsPerSecond": 79,
+  "averageResponseTime": "197ms",
+  "minResponseTime": "20ms",
+  "maxResponseTime": "1499ms"
+}

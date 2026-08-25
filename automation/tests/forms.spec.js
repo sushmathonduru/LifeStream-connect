@@ -60,6 +60,7 @@ describe('Forms Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_FORM_007');
     });
 
     it('TC_FORM_008 - Verify functionality in Forms 8', async () => {
@@ -186,7 +187,6 @@ describe('Forms Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_FORM_021');
     });
 
     it('TC_FORM_022 - Verify functionality in Forms 22', async () => {
@@ -232,6 +232,7 @@ describe('Forms Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_FORM_026');
     });
 
     it('TC_FORM_027 - Verify functionality in Forms 27', async () => {
@@ -304,6 +305,7 @@ describe('Forms Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
+        throw new Error('Simulated failure for TC_FORM_034');
     });
 
     it('TC_FORM_035 - Verify functionality in Forms 35', async () => {

@@ -123,7 +123,6 @@ describe('Search Module', () => {
         // 2. Perform action
         // Expected Result: Action succeeds
         await browser.pause(10);
-        throw new Error('Simulated failure for TC_SEARCH_014');
     });
 
     it('TC_SEARCH_015 - Verify functionality in Search 15', async () => {

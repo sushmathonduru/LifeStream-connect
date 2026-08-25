@@ -65,7 +65,20 @@ export default function DonorTracking() {
           });
         }
         if (data.hospitalLat && data.hospitalLng) {
-          setHospitalLocation({ lat: data.hospitalLat, lng: data.hospitalLng });
+          setHospitalLocation({ lat: Number(data.hospitalLat), lng: Number(data.hospitalLng) });
+        } else if (data.hospital || data.city) {
+          const queryText = (data.hospital ? data.hospital + " " : "") + (data.city || "");
+          fetch("https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(queryText))
+            .then((res) => res.json())
+            .then((results) => {
+              if (results && results.length > 0) {
+                setHospitalLocation({
+                  lat: parseFloat(results[0].lat),
+                  lng: parseFloat(results[0].lon)
+                });
+              }
+            })
+            .catch((err) => console.log("Geocoding error:", err));
         }
       }
       setLoading(false);

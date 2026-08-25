@@ -36,7 +36,7 @@ export default function LiveTracking() {
   const [request, setRequest] = useState(null)
   const [donor, setDonor] = useState(null)
   const [donorLocation, setDonorLocation] = useState(null)
-  const [hospitalLocation] = useState({ lat: 13.0569, lng: 80.2425 })
+  const [hospitalLocation, setHospitalLocation] = useState({ lat: 13.0569, lng: 80.2425 })
   const [currentStep, setCurrentStep] = useState(1)
   const [loading, setLoading] = useState(true)
   const [eta, setEta] = useState("Waiting for donor...")
@@ -63,6 +63,22 @@ export default function LiveTracking() {
           onValue(ref(db, "users/" + data.donorId), (snap) => {
             if (snap.val()) setDonor(snap.val())
           })
+        }
+        if (data.hospitalLat && data.hospitalLng) {
+          setHospitalLocation({ lat: Number(data.hospitalLat), lng: Number(data.hospitalLng) })
+        } else if (data.hospital || data.city) {
+          const queryText = (data.hospital ? data.hospital + " " : "") + (data.city || "")
+          fetch("https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(queryText))
+            .then((res) => res.json())
+            .then((results) => {
+              if (results && results.length > 0) {
+                setHospitalLocation({
+                  lat: parseFloat(results[0].lat),
+                  lng: parseFloat(results[0].lon)
+                })
+              }
+            })
+            .catch((err) => console.log("Geocoding error:", err))
         }
       }
       setLoading(false)
